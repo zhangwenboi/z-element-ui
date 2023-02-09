@@ -9,7 +9,14 @@ export default {
       type: [String, Number, Object, Array, Function],
       required: true
     },
-    isTag: Boolean
+    isTag: Boolean,
+    value: {
+      required: false
+    }
+  },
+  model: {
+    prop: 'value',
+    event: 'input'
   },
   render(h, context) {
     const isComponentName = (v) => v && typeof v === 'string' && context.props.isTag;

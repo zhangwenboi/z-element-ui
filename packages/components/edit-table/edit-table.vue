@@ -15,9 +15,7 @@
       <template v-for="(header, index) in requiredFields" #[header]="{ column }"> {{ column.label }}<span class="text-red" :key="index">* </span> </template>
       <template v-for="(item, index) in form.items" #[item.prop]="scope">
         <el-form-item v-if="scope.row._view_" :key="item.prop + index" :prop="`tableData.${scope.$index}.${item.prop}`" :rules="form.rules[item.prop]">
-          <component :is="'item-' + item.type" width="100%" v-model="scope.row[item.prop]" v-bind="item.option">
-            <template v-for="(slot, index) in item.slots" #[slot.name]="slotData"> </template>
-          </component>
+          <component :is="'item-' + item.type" width="100%" v-model="scope.row[item.prop]" v-bind="item.option"> </component>
         </el-form-item>
         <template v-else>
           {{ scope.row[item.prop] }}
@@ -40,9 +38,6 @@ import zComponents from '../render-component.vue';
 export default {
   name: 'zEditTable',
   components: { zComponents, zTable, formItem, itemSwitch, itemSelect, itemRadio, itemDatePicker, itemInput, itemCheckbox },
-  data() {
-    return {};
-  },
   computed: {
     requiredFields: (that) => that.form?.items?.filter((e) => e.require).map((e) => 'header' + e.prop) || []
   },
@@ -79,7 +74,6 @@ export default {
         this.validateRow(scope.$index, () => {
           this.operationDone(scope, this.save, (ifpass = true) => {
             if (ifpass) {
-              console.log(scope.row);
               scope.row._view_ = false;
             }
           });

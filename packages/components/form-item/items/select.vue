@@ -23,6 +23,7 @@
         </template>
         <template v-else>
           <el-option v-for="(option, index) of filterOptions" :key="option.value + index" v-bind="filterAttr(option, 'option')">
+            <!-- 在slot上绑定参数，在函数形式渲染的时候就会将这些当作参数传入函数。例如下面的方式就会被(e)=>{return(<div> 123 </div>)} e接受-->
             <slot name="option" :option="option" :index="index"></slot>
           </el-option>
         </template>

@@ -1,7 +1,8 @@
 <!-- @format -->
 
-<script setup>
+<script setup lang="jsx">
 import zEditTable from '../packages/components/edit-table/edit-table.vue';
+import zcmmmm from '../packages/components/zcmmmm.vue';
 const pickerOptions = {
   shortcuts: [
     {
@@ -88,16 +89,27 @@ const form = {
                 value: '北京'
               }
             ]);
-          }, 20000);
+          }, 2000);
         })
       }
     },
     {
       prop: 'address',
       type: 'select',
+      slots: {
+        prefix: () => {
+          let style = 'color:#409EFF;line-height:28px;font-size:20px';
+          return (
+            <i class="el-icon-platform-eleme" style={style}>
+              123123
+            </i>
+          );
+        }
+      },
       option: {
         placeholder: '请输入',
         clearable: true,
+
         filter: true,
         multiple: true,
         multipleLimit: 1,
@@ -144,14 +156,16 @@ const deleteTable = (pass) => {
     pass();
   }, 500);
 };
+const idom2 = (e) => {
+  return <div>123123{e}</div>;
+};
 </script>
 
 <template>
   <div id="app">
     <main>
       <zEditTable :form="form" :paginationOption="paginationOption" :save="save" :delete="deleteTable"></zEditTable>
-      <zDatepicker showShortcuts :pickerOptions="pickerOptions" type="daterange"></zDatepicker>
-      <zInput></zInput>
+      <zcmmmm> </zcmmmm>
     </main>
   </div>
 </template>

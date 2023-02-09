@@ -32,10 +32,7 @@ export default defineConfig({
     }
   },
   // vite.config.js
-  esbuild: {
-    jsxFactory: 'h',
-    jsxFragment: 'Fragment'
-  },
+
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
