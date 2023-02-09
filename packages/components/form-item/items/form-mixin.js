@@ -1,5 +1,10 @@
+/** @format */
+
 export default {
-  props: { form: { type: Object, default: () => {} } },
+  model: {
+    prop: 'value',
+    event: 'changeData'
+  },
   computed: {
     funcs() {
       let funcitonList = {};
@@ -9,6 +14,11 @@ export default {
         }
       }
       return funcitonList;
+    }
+  },
+  methods: {
+    changeData(e) {
+      this.$emit('changeData', e);
     }
   }
 };

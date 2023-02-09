@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <template>
-  <el-switch v-model="form[$attrs.prop]" v-bind="$attrs" v-on="funcs"> </el-switch>
+  <el-switch v-bind="$attrs" v-on="funcs"> </el-switch>
 </template>
 
 <script>

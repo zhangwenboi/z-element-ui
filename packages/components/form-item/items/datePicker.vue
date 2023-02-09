@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <template>
-  <el-date-picker v-model="form[$attrs.prop]" :type="$attrs.type" v-bind="$attrs" v-on="funcs" :pickerOptions="pickerOptions" :placeholder="$attrs.placeholder || '选择日期'"> </el-date-picker>
+  <el-date-picker :type="$attrs.type" v-bind="$attrs" v-on="funcs" :pickerOptions="pickerOptions" :placeholder="$attrs.placeholder || '选择日期'"> </el-date-picker>
 </template>
 
 <script>
@@ -10,9 +10,6 @@ export default {
   name: 'zDatePicker',
   mixins: [formMixin],
   components: {},
-  props: {
-    form: { type: Object, default: () => ({}) }
-  },
   computed: {
     pickerOptions() {
       let pickerOptions = this.$attrs.pickerOptions;

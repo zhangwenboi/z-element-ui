@@ -1,13 +1,13 @@
 /** @format */
 
 import zTable from './components/table/table.vue';
-import zCheckbox from './components/form-item/checkbox.vue';
-import zRadio from './components/form-item/radio.vue';
-import zInput from './components/form-item/input.vue';
-import zSelect from './components/form-item/select.vue';
-import zDatepicker from './components/form-item/datePicker.vue';
-import zTimePicker from './components/form-item/timePicker.vue';
-import zSwitch from './components/form-item/switch.vue';
+import zCheckbox from './components/form-item/items/checkbox.vue';
+import zRadio from './components/form-item/items/radio.vue';
+import zInput from './components/form-item/items/input.vue';
+import zSelect from './components/form-item/items/select.vue';
+import zDatepicker from './components/form-item/items/datePicker.vue';
+import zTimePicker from './components/form-item/items/timePicker.vue';
+import zSwitch from './components/form-item/items/switch.vue';
 export const components = {
   zTable,
   zCheckbox,

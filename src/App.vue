@@ -41,7 +41,7 @@ const paginationOption = {
 };
 
 const form = {
-  tableData: new Array(200).fill(0).map((item, index) => {
+  tableData: new Array(20).fill(0).map((item, index) => {
     return {
       date: `2016-05-02`,
       name: '王小虎',
@@ -55,14 +55,12 @@ const form = {
     { prop: 'address', label: '测试3' }
   ],
   rules: {
-    date: [{ required: true, message: '请选择日期', trigger: 'change' }],
-    name: [{ required: true, message: '请输入名称', trigger: 'change' }],
-    address: [{ required: true, message: '请选择地址', trigger: 'change' }]
+    name: [{ required: true, message: '请输入名称', trigger: 'change' }]
   },
   items: [
     {
       prop: 'date',
-      type: 'el-date-picker',
+      type: 'input',
       option: {
         placeholder: '请输入',
         type: 'daterange',
@@ -73,24 +71,69 @@ const form = {
     },
     {
       prop: 'name',
-      type: 'el-input',
+      type: 'select',
       require: true,
       option: {
         placeholder: '请输入',
-        clearable: true
+        clearable: true,
+        list: new Promise((resolve) => {
+          setTimeout(() => {
+            resolve([
+              {
+                label: '上海',
+                value: '上海'
+              },
+              {
+                label: '北京',
+                value: '北京'
+              }
+            ]);
+          }, 20000);
+        })
       }
     },
     {
       prop: 'address',
-      type: 'el-select',
+      type: 'select',
       option: {
         placeholder: '请输入',
         clearable: true,
-        options: ['上海', '北京', '广州', '深圳']
+        filter: true,
+        multiple: true,
+        multipleLimit: 1,
+        list: [
+          {
+            label: 'da',
+            list: [
+              {
+                label: '上海',
+                value: '上海'
+              },
+              {
+                label: '北京',
+                value: '北京'
+              }
+            ]
+          },
+          {
+            label: '北京',
+            list: [
+              {
+                label: '上海',
+                value: '上海'
+              },
+              {
+                label: '北京',
+                value: '北京'
+              }
+            ]
+          }
+        ]
       }
     }
   ]
 };
+
 const save = (pass) => {
   setTimeout(() => {
     pass(true);

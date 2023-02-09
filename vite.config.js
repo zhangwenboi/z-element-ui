@@ -4,12 +4,11 @@ import { fileURLToPath, URL } from 'node:url';
 
 import { defineConfig } from 'vite';
 import vue2 from '@vitejs/plugin-vue2';
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue2({
-      include: [/\.vue$/, /\.md$/]
+      include: [/\.vue$/, /\.md$/, /\.jsx$/]
     })
   ],
   // 打包配置
@@ -31,6 +30,11 @@ export default defineConfig({
         }
       }
     }
+  },
+  // vite.config.js
+  esbuild: {
+    jsxFactory: 'h',
+    jsxFragment: 'Fragment'
   },
   resolve: {
     alias: {

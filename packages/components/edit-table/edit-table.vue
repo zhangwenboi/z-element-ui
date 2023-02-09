@@ -1,39 +1,45 @@
 <!-- @format -->
 
 <template>
-  <div>
-    <el-form ref="editform" :model="form" size="mini">
-      <zTable ref="tableEditor" operation :paginationOption="paginationOption" :tableColumn="form.tableColumn" stripe highlight-current-row :tableData="form.tableData" checkbox>
-        <template #default="scope">
-          <template v-if="scope.row._loading_">
-            <el-button type="text" size="mini" icon="el-icon-loading"> </el-button>
-          </template>
-          <template v-else>
-            <el-button type="text" size="mini" @click="editTable(scope)">{{ scope.row._view_ ? '保存' : '编辑' }}</el-button>
-            <el-button type="text" size="mini" @click="deleteTable(scope)">删除</el-button>
-          </template>
+  <el-form ref="editform" :model="form" size="mini">
+    <zTable ref="tableEditor" operation :paginationOption="paginationOption" :tableColumn="form.tableColumn" stripe highlight-current-row :tableData="form.tableData" checkbox>
+      <template #default="scope">
+        <template v-if="scope.row._loading_">
+          <el-button type="text" size="mini" icon="el-icon-loading"> </el-button>
         </template>
-        <template v-for="(header, index) in requiredFields" #[header]="{ column }"> {{ column.label }}<span class="text-red" :key="index">* </span> </template>
-        <template v-for="(item, index) in form.items" #[item.prop]="scope">
-          <el-form-item v-if="scope.row._view_" :key="item.prop + index" :prop="`tableData.${scope.$index}.${item.prop}`" :rules="form.rules[item.prop]">
-            <component :is="item.type" width="100%" v-model="scope.row[item.prop]" v-bind="item.option" />
-          </el-form-item>
-          <template v-else>
-            {{ scope.row[item.prop] }}
-          </template>
+        <template v-else>
+          <el-button type="text" size="mini" @click="editTable(scope)">{{ scope.row._view_ ? '保存' : '编辑' }}</el-button>
+          <el-button type="text" size="mini" @click="deleteTable(scope)">删除</el-button>
         </template>
-      </zTable>
-    </el-form>
-  </div>
+      </template>
+      <template v-for="(header, index) in requiredFields" #[header]="{ column }"> {{ column.label }}<span class="text-red" :key="index">* </span> </template>
+      <template v-for="(item, index) in form.items" #[item.prop]="scope">
+        <el-form-item v-if="scope.row._view_" :key="item.prop + index" :prop="`tableData.${scope.$index}.${item.prop}`" :rules="form.rules[item.prop]">
+          <component :is="'item-' + item.type" width="100%" v-model="scope.row[item.prop]" v-bind="item.option">
+            <template v-for="(slot, index) in item.slots" #[slot.name]="slotData"> </template>
+          </component>
+        </el-form-item>
+        <template v-else>
+          {{ scope.row[item.prop] }}
+        </template>
+      </template>
+    </zTable>
+  </el-form>
 </template>
 
 <script>
 import zTable from '../table/table.vue';
-import zComponents from '../../render-component.js';
-
+import formItem from '../form-item/index.vue';
+import itemCheckbox from '../form-item/items/checkbox.vue';
+import itemInput from '../form-item/items/input.vue';
+import itemDatePicker from '../form-item/items/datePicker.vue';
+import itemRadio from '../form-item/items/radio.vue';
+import itemSelect from '../form-item/items/select.vue';
+import itemSwitch from '../form-item/items/switch.vue';
+import zComponents from '../render-component.vue';
 export default {
   name: 'zEditTable',
-  components: { zTable, zComponents },
+  components: { zComponents, zTable, formItem, itemSwitch, itemSelect, itemRadio, itemDatePicker, itemInput, itemCheckbox },
   data() {
     return {};
   },
@@ -73,6 +79,7 @@ export default {
         this.validateRow(scope.$index, () => {
           this.operationDone(scope, this.save, (ifpass = true) => {
             if (ifpass) {
+              console.log(scope.row);
               scope.row._view_ = false;
             }
           });
