@@ -3,7 +3,12 @@
 export default {
   model: {
     prop: 'value',
-    event: 'changeData'
+    event: 'change'
+  },
+  data() {
+    return {
+      Value: this.value
+    };
   },
   computed: {
     funcs() {
@@ -18,7 +23,7 @@ export default {
   },
   methods: {
     changeData(e) {
-      this.$emit('changeData', e);
+      this.$emit('change', e);
     }
   }
 };

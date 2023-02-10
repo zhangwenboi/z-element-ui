@@ -1,6 +1,3 @@
-<!-- @format -->
-
-<script lang="jsx">
 export default {
   name: 'render-component',
   functional: true,
@@ -9,7 +6,10 @@ export default {
       type: [String, Number, Object, Array, Function],
       required: true
     },
-    isTag: Boolean,
+    isTag: {
+      type: Boolean,
+      default: false
+    },
     value: {
       required: false
     }
@@ -19,6 +19,7 @@ export default {
     event: 'input'
   },
   render(h, context) {
+    context.data.on = context.listeners;
     const isComponentName = (v) => v && typeof v === 'string' && context.props.isTag;
     const isComponentInstance = (v) => v && typeof v === 'object' && typeof v.render === 'function';
     const isComponentAsyncFun = (v) => v && v instanceof Promise;
@@ -41,10 +42,11 @@ export default {
     };
     const render = context.props.render;
     const value = typeof render === 'function' ? render(context.data.attrs) : render;
+
+    
     if (isText(value)) return h('span', context.data, value);
-    if (isComponent(value)) return h(render, context.data, context.children);
+    if (isComponent(value)) return h('components', {...context.data,is:render}, context.children);
     if (isVNode(value)) return wrapvnode(value);
     if (isVNodes(value)) return fragments(value);
   }
 };
-</script>

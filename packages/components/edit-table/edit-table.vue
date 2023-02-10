@@ -27,17 +27,16 @@
 
 <script>
 import zTable from '../table/table.vue';
-import formItem from '../form-item/index.vue';
 import itemCheckbox from '../form-item/items/checkbox.vue';
 import itemInput from '../form-item/items/input.vue';
 import itemDatePicker from '../form-item/items/datePicker.vue';
 import itemRadio from '../form-item/items/radio.vue';
 import itemSelect from '../form-item/items/select.vue';
 import itemSwitch from '../form-item/items/switch.vue';
-import zComponents from '../render-component.vue';
+
 export default {
   name: 'zEditTable',
-  components: { zComponents, zTable, formItem, itemSwitch, itemSelect, itemRadio, itemDatePicker, itemInput, itemCheckbox },
+  components: { zTable, itemSwitch, itemSelect, itemRadio, itemDatePicker, itemInput, itemCheckbox },
   computed: {
     requiredFields: (that) => that.form?.items?.filter((e) => e.require).map((e) => 'header' + e.prop) || []
   },

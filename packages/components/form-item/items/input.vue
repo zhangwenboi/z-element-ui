@@ -24,7 +24,7 @@ export default {
   },
   mixins: [formMixin],
   computed: {},
-  mounted() {},
+
   methods: {
     input(e) {
       this.$emit('input', e);

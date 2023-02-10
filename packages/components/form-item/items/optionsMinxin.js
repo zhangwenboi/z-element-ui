@@ -7,7 +7,8 @@ export default {
       default: () => {
         return { label: 'label', value: 'value' };
       }
-    }
+    },
+    data: { type: [Array, Function, Promise], default: () => [] }
   },
   data() {
     return {
@@ -17,14 +18,14 @@ export default {
   },
 
   watch: {
-    list: {
+    data: {
       immediate: true,
       handler: 'getOptions'
     }
   },
   methods: {
     async getOptions() {
-      let options = this.list || [];
+      let options = this.data || [];
       this.proxyOptions = [];
       if (Array.isArray(options)) {
         this.proxyOptions = this.transformOptions(options);
@@ -42,26 +43,29 @@ export default {
     },
     // 转化成标准的 [{label,value}] 结构
     transformOptions(options) {
-      return options
-        .map((option) => {
-          if (option.constructor == Object) {
-            const props = this.props;
-            const value = option[props.value];
-            return {
-              ...option,
-              label: String(option[props.label]),
-              value: this.isProxyStrValue && typeof value === 'number' ? String(value) : value,
-              list: this.transformOptions(option.list || [])
-            };
-          } else if (option.constructor == String || option.constructor == Number) {
-            return {
-              label: String(option),
-              value: this.isProxyStrValue && typeof option === 'number' ? String(option) : option
-            };
-          }
-          return false;
-        })
-        .filter((v) => v !== false);
+      if (options && options.length > 0) {
+        return options
+          .map((option) => {
+            if (option.constructor == Object) {
+              const props = this.props;
+              const value = option[props.value];
+              return {
+                ...option,
+                label: String(option[props.label]),
+                value: this.isProxyStrValue && typeof value === 'number' ? String(value) : value,
+                data: this.transformOptions(option.data || [])
+              };
+            } else if (option.constructor == String || option.constructor == Number) {
+              return {
+                label: String(option),
+                value: this.isProxyStrValue && typeof option === 'number' ? String(option) : option
+              };
+            }
+            return false;
+          })
+          .filter((v) => v !== false);
+      }
+      return [];
     }
   }
 };

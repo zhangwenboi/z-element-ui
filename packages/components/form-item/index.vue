@@ -6,7 +6,7 @@
       <render-component v-if="label" :render="label" />
     </slot>
     <slot>
-      <render-component v-if="component.name" :render="component.name" v-bind="component.attrs" v-on="component.on" :is-tag="component.isTag" :ref="prop || 'component'" v-model="field.value">
+      <render-component v-if="option.name" :render="option.name" v-bind="option" v-on="option.on" :is-tag="option.isTag" :ref="prop || 'component'" v-model="form[prop]">
         <template v-for="(slot, staticName) in slots.staticSlots" #[staticName]>
           <render-component :key="staticName" :render="slot" />
         </template>
@@ -19,32 +19,52 @@
 </template>
 
 <script>
-import renderComponent from '../render-component.vue';
+import renderComponent from '../render-component.jsx';
 import { getPropByPath } from 'element-ui/src/utils/util';
-
+import itemTable from '../table/table.vue';
+import itemCheckbox from './items/checkbox.vue';
+import itemRadio from './items/radio.vue';
+import itemInput from './items/input.vue';
+import itemSelect from './items/select.vue';
+import itemDatepicker from './items/datePicker.vue';
+import itemTimePicker from './items/timePicker.vue';
+import itemSwitch from './items/switch.vue';
+import itemEditTable from '../edit-table/edit-table.vue';
 export default {
-  name: 'z-form-item',
+  name: `z-form-item`,
   inheritAttrs: false,
   components: {
-    renderComponent
+    renderComponent,
+    itemTable,
+    itemCheckbox,
+    itemRadio,
+    itemInput,
+    itemSelect,
+    itemDatepicker,
+    itemTimePicker,
+    itemSwitch,
+    itemEditTable
   },
   inject: ['elForm'],
   props: {
     prop: String,
     label: [String, Number, Object, Array, Function],
-
-    component: {
+    option: {
       type: Object,
       required: true
     },
-    defaultValue: {}
+    defaultValue: {},
+    form: {
+      type: Object,
+      default: () => ({})
+    }
   },
   computed: {
     field() {
       return getPropByPath(this.elForm.model, this.prop, true) || {};
     },
     slots() {
-      let slots = this.component.slots || {};
+      let slots = this.option.slots || {};
       let scopedSlots = {};
       let staticSlots = {};
       if (slots.constructor == Object) {
@@ -72,6 +92,7 @@ export default {
       }
     }
   },
+
   methods: {
     setFieldDefaultValue() {
       if (this.prop && this.prop.indexOf('_uid_') === -1 && !this.field.o.hasOwnProperty(this.field.k)) {

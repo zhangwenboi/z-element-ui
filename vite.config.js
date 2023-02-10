@@ -4,12 +4,14 @@ import { fileURLToPath, URL } from 'node:url';
 
 import { defineConfig } from 'vite';
 import vue2 from '@vitejs/plugin-vue2';
+import vuejsx from '@vitejs/plugin-vue2-jsx';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue2({
-      include: [/\.vue$/, /\.md$/, /\.jsx$/]
-    })
+      include: [/\.vue$/, /\.md$/]
+    }),
+    vuejsx()
   ],
   // 打包配置
   build: {

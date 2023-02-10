@@ -16,7 +16,7 @@
         <el-option class="z-empty-option" v-if="filter && filterOptions?.length == 0" :label="filterEmptyText" :value="filterEmptyText" disabled> </el-option>
         <template v-if="isGroup">
           <el-option-group v-for="group in filterOptions" :key="group.label" v-bind="filterAttr(group, 'group')">
-            <el-option v-for="(option, index) of group.list || []" :key="option.value" v-bind="filterAttr(option, 'option')">
+            <el-option v-for="(option, index) of group.data || []" :key="option.value" v-bind="filterAttr(option, 'option')">
               <slot name="option" :option="option" :index="index" :group="group"></slot>
             </el-option>
           </el-option-group>
@@ -34,7 +34,7 @@
 
 <script>
 import formMixin from './form-mixin';
-import optionMixin from '../../../utils/optionsMinxin';
+import optionMixin from './optionsMinxin';
 import { getProp, getIncludeAttrs } from '../../../utils/utils';
 
 const optionPropsKeys = ['value', 'label', 'disabled', 'style', 'class'];
@@ -45,7 +45,6 @@ export default {
   components: {},
   props: {
     value: { type: [Array, Number, String], default: '' },
-    list: { type: [Array, Function, Promise], default: () => [] },
     filter: Boolean,
     loadingText: {
       type: String,
@@ -61,7 +60,7 @@ export default {
     }
   },
   data() {
-    return { Value: this.value, filterText: '' };
+    return { filterText: '' };
   },
   watch: {
     watch() {
@@ -73,7 +72,7 @@ export default {
   computed: {
     isGroup() {
       return this.proxyOptions.some((v) => {
-        return Array.isArray(v?.list) && v.list?.length > 0;
+        return Array.isArray(v?.data) && v.data?.length > 0;
       });
     },
     filterOptions() {
@@ -98,9 +97,9 @@ export default {
       return options.filter((data) => {
         if (value === '') return true;
         let isMatching = String(data.label).indexOf(value) !== -1;
-        if (!isMatching && this.isGroup && data.list.length > 0) {
-          data.list = this.handleFilterNode(data.list, value);
-          return data.list.length > 0;
+        if (!isMatching && this.isGroup && data.data.length > 0) {
+          data.data = this.handleFilterNode(data.data, value);
+          return data.data.length > 0;
         }
         return isMatching;
       });
