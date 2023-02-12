@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <template>
-  <el-switch v-bind="$attrs" v-on="funcs"> </el-switch>
+  <el-switch v-model="Value" @change="changeData" v-bind="$attrs" v-on="funcs"> </el-switch>
 </template>
 
 <script>
@@ -10,7 +10,12 @@ export default {
   name: 'zSwitch',
   mixins: [formMixin],
   components: {},
-  props: {},
+  props: {
+    value: {
+      type: [Boolean, String, Number],
+      default: true
+    }
+  },
   data() {
     return {};
   },

@@ -40,6 +40,7 @@ export default {
         this.proxyOptions = this.transformOptions(await options);
         this.optionsLoading = false;
       }
+      console.log(this.proxyOptions, this.$attrs.name);
     },
     // 转化成标准的 [{label,value}] 结构
     transformOptions(options) {

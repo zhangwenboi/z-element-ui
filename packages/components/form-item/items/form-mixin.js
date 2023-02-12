@@ -23,6 +23,8 @@ export default {
   },
   methods: {
     changeData(e) {
+      console.log('🚀 ~ e', e);
+
       this.$emit('change', e);
     }
   }

@@ -22,9 +22,7 @@ export default {
   },
   data() {
     return {
-      form: {
-        name: '123'
-      },
+      form: {},
       rules: {
         name: [
           { required: true, message: '请输入姓名', trigger: 'blur' },
@@ -42,8 +40,33 @@ export default {
               placeholder: '请输入姓名'
             }
           },
-          defaultValue: '张三'
+          defaultValue: '89876789'
         },
+        {
+          prop: 'switch',
+          label: '开关',
+          option: {
+            isTag: true,
+            name: 'item-switch'
+          },
+          defaultValue: false
+        },
+        {
+          prop: 'chekbox',
+          label: 'sdas',
+          option: {
+            isTag: true,
+            multiple: true,
+            name: 'item-checkbox',
+            data: [
+              { label: '18', value: '18', disabled: true },
+              { label: '19', value: '19' },
+              { label: '20', value: '20' }
+            ]
+          },
+          defaultValue: ['20']
+        },
+
         {
           prop: 'age',
           label: '年龄',
@@ -59,7 +82,7 @@ export default {
               placeholder: '请输入年龄'
             }
           },
-          defaultValue: '18'
+          defaultValue: '20'
         },
         {
           prop: 'age1',
@@ -82,7 +105,7 @@ export default {
               placeholder: '请输入年龄'
             }
           },
-          defaultValue: '18'
+          defaultValue: '20'
         }
       ]
     };
