@@ -1,8 +1,6 @@
 /** @format */
-import { components } from '../components/index';
 export const config = {
-  tagPrefix: 'item-',
-  tags: components
+  tagPrefix: 'item-'
 };
 //错误捕获
 export const errorHandle = (error, vm, info) => {

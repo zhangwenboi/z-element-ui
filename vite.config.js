@@ -34,7 +34,13 @@ export default defineConfig({
     }
   },
   // vite.config.js
-
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: "@import 'src/style/index.scss';"
+      }
+    }
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

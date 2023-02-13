@@ -3,7 +3,7 @@
 // 内需插件： 深度合并、ELementUI
 import deepmerge from 'deepmerge';
 
-// import basicOptions from './options.js';
+import basicOptions from './utils/options.js';
 
 // 引入公共组件、指令、过滤器
 import components from './components';
@@ -26,6 +26,7 @@ const install = (Vue, option = {}) => {
   setElement(Vue);
   // 遍历注册全局组件
   Vue.use(components);
+
   Vue.use(directives, options.directives);
   Vue.use(filters);
   Vue.config.errorHandler = errorHandle;
