@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import zTable from '../table/table.vue';
+import zTable from '../table/index.vue';
 import itemCheckbox from '../form-item/items/checkbox.vue';
 import itemInput from '../form-item/items/input.vue';
 import itemDatePicker from '../form-item/items/datePicker.vue';

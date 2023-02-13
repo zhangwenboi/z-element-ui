@@ -21,7 +21,7 @@
 <script>
 import renderComponent from '../render-component.jsx';
 import { getPropByPath } from 'element-ui/src/utils/util';
-import itemTable from '../table/table.vue';
+import itemTable from '../table/index.vue';
 import itemCheckbox from './items/checkbox.vue';
 import itemRadio from './items/radio.vue';
 import itemInput from './items/input.vue';
@@ -29,7 +29,7 @@ import itemSelect from './items/select.vue';
 import itemDatepicker from './items/datePicker.vue';
 import itemTimePicker from './items/timePicker.vue';
 import itemSwitch from './items/switch.vue';
-import itemEditTable from '../edit-table/edit-table.vue';
+import itemEditTable from '../edit-table/index.vue';
 export default {
   name: `z-form-item`,
   inheritAttrs: false,

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import zForm from '../packages/components/form/form.vue';
+import zForm from '../packages/components/form/index.vue';
 export default {
   name: 'App',
   components: {

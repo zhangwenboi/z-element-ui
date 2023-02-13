@@ -1,31 +1,38 @@
 /** @format */
 
-import Table from './components/table/table.vue';
-import Checkbox from './components/form-item/items/checkbox.vue';
-import Radio from './components/form-item/items/radio.vue';
-import Input from './components/form-item/items/input.vue';
-import Select from './components/form-item/items/select.vue';
-import Datepicker from './components/form-item/items/datePicker.vue';
-import TimePicker from './components/form-item/items/timePicker.vue';
-import Switch from './components/form-item/items/switch.vue';
-import EditTable from './components/edit-table/edit-table.vue';
-import { config } from './utils/config';
-export const comList = {
-  Table,
-  Checkbox,
-  Radio,
-  Input,
-  Select,
-  Datepicker,
-  TimePicker,
-  Switch,
-  EditTable
-};
-const install = function (Vue) {
+// 内需插件： 深度合并、ELementUI
+import deepmerge from 'deepmerge';
+
+// import basicOptions from './options.js';
+
+// 引入公共组件、指令、过滤器
+import components from './components';
+import directives from './directives';
+import filters from './filters';
+import ElementUI from 'element-ui';
+
+// // 引入axios配置
+// import axiosHttp from './http';
+
+// 引入公共函数（数组函数、对象函数、日期函数、cookies函数）、引入验证正则、加密解密方法
+// import { funcSet, Valid, setElement, setEncrypt } from './utils';
+import { errorHandle } from './utils/config';
+// 定义 install 方法，接收 Vue 作为参数。如果使用 use 注册插件，则所有的组件都将被注册1
+const install = (Vue, option = {}) => {
   // 判断是否安装
   if (install.installed) return;
+  const options = deepmerge(basicOptions, option);
+  Vue.prototype.$Config = options;
+  setElement(Vue);
   // 遍历注册全局组件
-  Object.keys(comList).forEach((e) => Vue.component(config.tagPrefix + e, components[e]));
+  Vue.use(components);
+  Vue.use(directives, options.directives);
+  Vue.use(filters);
+  Vue.config.errorHandler = errorHandle;
+  // Vue.prototype.$kicHttp = axiosHttp(options.axios);
+  // Vue.prototype.$Func = funcSet;
+  // Vue.prototype.$Valid = Valid;
+  // setEncrypt(Vue, options);
 };
 
 // 判断是否是直接引入文件
@@ -33,7 +40,14 @@ if (typeof window !== 'undefined' && window.Vue) {
   install(window.Vue);
 }
 
-export default {
-  // 导出的对象必须具有 install，才能被 Vue.use() 方法安装
-  install
+export default install;
+const setElement = (Vue) => {
+  Vue.use(ElementUI);
+  // ElementUI的全局函数注册到Vue到全局
+  Vue.prototype.$messge = ElementUI.Message;
+  Vue.prototype.$msgbox = ElementUI.MessageBox;
+  Vue.prototype.$alert = ElementUI.MessageBox.alert;
+  Vue.prototype.$confirm = ElementUI.MessageBox.confirm;
+  Vue.prototype.$prompt = ElementUI.MessageBox.prompt;
+  Vue.prototype.$notify = ElementUI.Notification;
 };

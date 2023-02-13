@@ -1,7 +1,6 @@
 /** @format */
 
 import Vue from 'vue';
-import { h } from 'vue';
 import App from './App.vue';
 
 import './assets/main.css';
