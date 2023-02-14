@@ -19,7 +19,7 @@
       </el-table-column>
 
       <!-- 通用 -->
-      <el-table-column v-for="(item, index) in tableColumn" :key="item + index" v-bind="item" :show-overflow-tooltip="!item['show-overflow-tooltip']" class="truncate">
+      <el-table-column v-for="(item, index) in tableColumn" :key="item + index" v-bind="item" class="truncate">
         <template v-if="_showSlot('header' + item.prop)" #header="scope">
           <slot v-bind="scope" :name="'header' + item.prop"></slot>
         </template>
@@ -100,8 +100,6 @@ export default {
       immediate: true
     }
   },
-  computed: {},
-  mounted() {},
   methods: {
     _updateTableData(val) {
       this.currentData = val.slice(this.pgOption.pageSize * (this.pgOption.currentPage - 1), this.pgOption.pageSize * this.pgOption.currentPage);
