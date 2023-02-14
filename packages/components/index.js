@@ -9,7 +9,7 @@ import Datepicker from './form-item/items/datePicker.vue';
 import TimePicker from './form-item/items/timePicker.vue';
 import Switch from './form-item/items/switch.vue';
 import EditTable from './edit-table/index.vue';
-import Theme from './theme/index.vue';
+import Theme from './theme/index_bakl.vue';
 import { config } from '../utils/config';
 export const comList = {
   Table,

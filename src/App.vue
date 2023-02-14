@@ -4,7 +4,7 @@
   <div id="app">
     <main>
       <zForm />
-      <itemTheme> </itemTheme>
+      <itemTheme :color="{ primary: '#687877', success: '#FA541C', info: '#1890FF', warning: '#722ED1', danger: '#EB2F96' }"> </itemTheme>
       <div class="btn-chalk"></div>
       <el-row>
         <el-button>默认按钮</el-button>

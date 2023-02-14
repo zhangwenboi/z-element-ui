@@ -6,7 +6,7 @@ import App from './App.vue';
 import './assets/main.css';
 import ElementUI from 'element-ui';
 import components from '../packages/index';
-import 'element-ui/lib/theme-chalk/index.css';
+import '../packages/style/index.scss';
 components(Vue);
 Vue.use(ElementUI);
 new Vue({
