@@ -2,7 +2,7 @@
 
 <template>
   <el-form ref="editform" :model="form" size="mini">
-    <zTable ref="tableEditor" operation :paginationOption="paginationOption" :tableColumn="form.tableColumn" stripe highlight-current-row :tableData="form.tableData" checkbox>
+    <zTable ref="tableEditor" showOperation :paginationOption="paginationOption" :tableColumn="form.tableColumn" stripe highlight-current-row :tableData="form.tableData" checkbox>
       <template #default="scope">
         <template v-if="scope.row._loading_">
           <el-button type="text" size="mini" icon="el-icon-loading"> </el-button>
