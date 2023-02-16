@@ -5,13 +5,15 @@ import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite';
 import vue2 from '@vitejs/plugin-vue2';
 import vuejsx from '@vitejs/plugin-vue2-jsx';
+import VitePluginStyleInject from 'vite-plugin-style-inject';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue2({
       include: [/\.vue$/, /\.md$/]
     }),
-    vuejsx()
+    vuejsx(),
+    VitePluginStyleInject()
   ],
   // 打包配置
   build: {

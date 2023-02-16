@@ -4,7 +4,8 @@
   <div id="app">
     <main>
       <zForm />
-      <itemTheme :color="{ primary: '#687877', success: '#FA541C', info: '#1890FF', warning: '#722ED1', danger: '#EB2F96' }"> </itemTheme>
+      <z-theme :url="'/variables-min.css'" :color="{ primary: '#687877', success: '#FA541C', info: '#1890FF', warning: '#722ED1', danger: '#EB2F96' }"> </z-theme>
+      <zEditTable :form="form"></zEditTable>
       <div class="btn-chalk"></div>
       <el-row>
         <el-button>默认按钮</el-button>
@@ -47,12 +48,129 @@
 
 <script>
 import zForm from '../packages/components/form/index.vue';
-import itemTheme from '../packages/components/theme/index.vue';
+
 export default {
   name: 'App',
   components: {
-    zForm,
-    itemTheme
+    zForm
+  },
+  data() {
+    const randomTableColumn = () => {
+      return new Array(300).fill(0).map((e, i) => ({ prop: `name${i}`, label: `第${i}列` }));
+    };
+    const randomTableData = () => {
+      return new Array(20).fill(0).map((item, index) => {
+        const obj = {};
+        for (let i = 0; i <= 300; i++) {
+          obj[`name${i}`] = `第${i}列 ， 第${item}行`;
+        }
+        return obj;
+      });
+    };
+    const randomItems = () => {
+      return new Array(300).fill(0).map((e, i) => {
+        return {
+          prop: `name${i}`,
+          type: 'input',
+          option: {
+            placeholder: '请输入'
+          }
+        };
+      });
+    };
+    return {
+      form: {
+        tableData:
+          randomTableData() ||
+          new Array(20).fill(0).map((item, index) => {
+            return {
+              date: `2016-05-02`,
+              name: '王小虎',
+              address: '上海市普陀区金沙江路 1518 弄',
+              _view_: false
+            };
+          }),
+        tableColumn: randomTableColumn() || [
+          { prop: 'date', label: '测试1' },
+          { prop: 'name', label: '测试2' },
+          { prop: 'address', label: '测试3' }
+        ],
+        rules: {
+          name: [{ required: true, message: '请输入名称', trigger: 'change' }]
+        },
+        items: randomItems() || [
+          {
+            prop: 'date',
+            type: 'input',
+            option: {
+              placeholder: '请输入'
+            }
+          },
+          {
+            prop: 'name',
+            type: 'select',
+            require: true,
+            option: {
+              placeholder: '请输入',
+              clearable: true,
+              list: new Promise((resolve) => {
+                setTimeout(() => {
+                  resolve([
+                    {
+                      label: '上海',
+                      value: '上海'
+                    },
+                    {
+                      label: '北京',
+                      value: '北京'
+                    }
+                  ]);
+                }, 20000);
+              })
+            }
+          },
+          {
+            prop: 'address',
+            type: 'select',
+            option: {
+              placeholder: '请输入',
+              clearable: true,
+              filter: true,
+              multiple: true,
+              multipleLimit: 1,
+              list: [
+                {
+                  label: 'da',
+                  list: [
+                    {
+                      label: '上海',
+                      value: '上海'
+                    },
+                    {
+                      label: '北京',
+                      value: '北京'
+                    }
+                  ]
+                },
+                {
+                  label: '北京',
+                  list: [
+                    {
+                      label: '上海',
+                      value: '上海'
+                    },
+                    {
+                      label: '北京',
+                      value: '北京'
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    };
   }
 };
 </script>

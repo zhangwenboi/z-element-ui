@@ -1,15 +1,10 @@
 /** @format */
-
-// 内需插件： 深度合并、ELementUI
 import deepmerge from 'deepmerge';
-
 import basicOptions from './utils/options.js';
-
 // 引入公共组件、指令、过滤器
-import components from './components';
-import directives from './directives';
-import filters from './filters';
-import ElementUI from 'element-ui';
+import componentsModule from './components';
+import directivesModule from './directives';
+import filtersModule from './filters';
 
 // // 引入axios配置
 // import axiosHttp from './http';
@@ -23,7 +18,7 @@ const install = (Vue, option = {}) => {
   if (install.installed) return;
   const options = deepmerge(basicOptions, option);
   Vue.prototype.$Config = options;
-  setElement(Vue);
+  // setElement(Vue);
   // 遍历注册全局组件
   Vue.use(components);
 
@@ -40,9 +35,7 @@ const install = (Vue, option = {}) => {
 if (typeof window !== 'undefined' && window.Vue) {
   install(window.Vue);
 }
-
-export default install;
-const setElement = (Vue) => {
+const setElement = (Vue, ElementUI) => {
   Vue.use(ElementUI);
   // ElementUI的全局函数注册到Vue到全局
   Vue.prototype.$messge = ElementUI.Message;
@@ -52,3 +45,9 @@ const setElement = (Vue) => {
   Vue.prototype.$prompt = ElementUI.MessageBox.prompt;
   Vue.prototype.$notify = ElementUI.Notification;
 };
+
+export const components = componentsModule;
+export const directives = directivesModule;
+export const filters = filtersModule;
+export { install, setElement };
+export default { install };

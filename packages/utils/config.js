@@ -1,10 +1,10 @@
 /** @format */
 export const config = {
-  tagPrefix: 'item-'
+  tagPrefix: 'z'
 };
 //错误捕获
 export const errorHandle = (error, vm, info) => {
-  console.error('error---', err);
+  console.error('error---', error);
   console.info('vm---', vm);
   console.info('info---', info);
 };

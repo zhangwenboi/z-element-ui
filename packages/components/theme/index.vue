@@ -53,13 +53,10 @@ export default {
   methods: {
     //根据选择改变primary颜色
     changeColor(primary) {
-      console.log(this.originalColorObj, primary);
       this.changeTheme({ ...this.originalColorObj, primary });
     },
     //改变所有的颜色
     async changeTheme(colorValue) {
-      console.log('🚀 ~ colorValue', colorValue);
-
       const originalObject = this.originalColorObj;
       const getColorList = (color) => {
         const colorList = [];
