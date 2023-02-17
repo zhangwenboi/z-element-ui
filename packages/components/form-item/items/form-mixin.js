@@ -14,7 +14,10 @@ export default {
     funcs() {
       let funcitonList = {};
       for (const key in this.$attrs) {
-        if (Object.hasOwnProperty.call(this.$attrs, key) && typeof this.$attrs[key] === 'function') {
+        if (
+          Object.hasOwnProperty.call(this.$attrs, key) &&
+          typeof this.$attrs[key] === 'function'
+        ) {
           funcitonList[key] = this.$attrs[key];
         }
       }
@@ -23,8 +26,6 @@ export default {
   },
   methods: {
     changeData(e) {
-      console.log('🚀 ~ e', e);
-
       this.$emit('change', e);
     }
   }

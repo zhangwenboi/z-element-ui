@@ -131,8 +131,7 @@ export default {
         if (!val) return;
         this._updateTableData(val);
       },
-      immediate: true,
-      deep: true
+      immediate: true
     },
     paginationOption: {
       handler(val) {

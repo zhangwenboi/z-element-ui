@@ -2,23 +2,58 @@
 
 <template>
   <el-form ref="editform" :model="form" size="mini">
-    <zTable ref="tableEditor" showOperation :paginationOption="paginationOption" :tableColumn="form.tableColumn" stripe highlight-current-row :tableData="form.tableData" checkbox>
+    <zTable
+      ref="tableEditor"
+      showOperation
+      :paginationOption="paginationOption"
+      :tableColumn="form.tableColumn"
+      stripe
+      highlight-current-row
+      :tableData="form.tableData"
+      checkbox
+      :total="form.tableData.length"
+    >
       <template #default="scope">
         <template v-if="scope.row._loading_">
-          <el-button type="text" size="mini" icon="el-icon-loading"> </el-button>
+          <el-button type="text" size="mini" icon="el-icon-loading">
+          </el-button>
         </template>
         <template v-else>
-          <el-button type="text" size="mini" @click="editTable(scope)">{{ scope.row._view_ ? '保存' : '编辑' }}</el-button>
-          <el-button type="text" size="mini" @click="deleteTable(scope)">删除</el-button>
+          <el-button type="text" size="mini" @click="editTable(scope)">{{
+            scope.row._view_ ? '保存' : '编辑'
+          }}</el-button>
+          <el-button type="text" size="mini" @click="deleteTable(scope)"
+            >删除</el-button
+          >
         </template>
       </template>
-      <template v-for="(header, index) in requiredFields" #[header]="{ column }"> {{ column.label }}<span class="text-red" :key="index">* </span> </template>
+      <template
+        v-for="(header, index) in requiredFields"
+        #[header]="{ column }"
+      >
+        {{ column.label }}<span class="text-red" :key="index"> * </span>
+      </template>
       <template v-for="(item, index) in form.items" #[item.prop]="scope">
-        <el-form-item v-if="scope.row._view_" :key="item.prop + index" :prop="`tableData.${scope.$index}.${item.prop}`" :rules="form.rules[item.prop]">
-          <component :is="'item-' + item.type" width="100%" v-model="scope.row[item.prop]" v-bind="item.option"> </component>
+        <el-form-item
+          v-if="scope.row._view_"
+          :key="`tableData.${scope.$index}.${item.prop}`"
+          :prop="`tableData.${scope.$index}.${item.prop}`"
+          :rules="form.rules[item.prop]"
+        >
+          <zRenderComponents
+            :render="item.render"
+            v-bind="{ scope, ...item.option }"
+            v-on="item.option.on"
+            :is-tag="true"
+            :ref="item.prop || 'component'"
+            v-model="scope.row[item.prop]"
+          ></zRenderComponents>
         </el-form-item>
+        <template v-else-if="_showSlot(item.prop)">
+          <slot :name="item.prop" :scope="scope"></slot>
+        </template>
         <template v-else>
-          {{ scope.row[item.prop] }}
+          <span>{{ scope.row[item.prop] }}</span>
         </template>
       </template>
     </zTable>
@@ -27,18 +62,20 @@
 
 <script>
 import zTable from '../table/index.vue';
-import itemCheckbox from '../form-item/items/checkbox.vue';
-import itemInput from '../form-item/items/input.vue';
-import itemDatePicker from '../form-item/items/datePicker.vue';
-import itemRadio from '../form-item/items/radio.vue';
-import itemSelect from '../form-item/items/select.vue';
-import itemSwitch from '../form-item/items/switch.vue';
-
+import zFormItem from '../form-item/index.vue';
+import zRenderComponents from '../render-component';
 export default {
   name: 'zEditTable',
-  components: { zTable, itemSwitch, itemSelect, itemRadio, itemDatePicker, itemInput, itemCheckbox },
+  components: {
+    zFormItem,
+    zTable,
+    zRenderComponents
+  },
   computed: {
-    requiredFields: (that) => that.form?.items?.filter((e) => e.require).map((e) => 'header' + e.prop) || []
+    requiredFields: (that) =>
+      that.form?.items
+        ?.filter((e) => e.require)
+        .map((e) => e.prop + 'header') || []
   },
   props: {
     form: {
@@ -65,7 +102,11 @@ export default {
     }
   },
   methods: {
+    _showSlot(prop) {
+      return this.$scopedSlots[prop] || this.$slots[prop];
+    },
     editTable(scope) {
+      console.log(this.form);
       if (scope.row?._view_ === undefined) {
         this.$set(scope.row, '_view_', false);
       }
@@ -88,7 +129,9 @@ export default {
       });
     },
     validateRow(index, callback) {
-      let props = this.form.items.filter((e) => e.require).map((e) => `tableData.${index}.${e.prop}`);
+      let props = this.form.items
+        .filter((e) => e.require)
+        .map((e) => `tableData.${index}.${e.prop}`);
       let ok = true;
       this.$refs['editform'].validateField(props, (errMsg) => {
         if (errMsg) {
@@ -97,15 +140,18 @@ export default {
       });
       ok && callback && callback();
     },
+    // 操作完成后的回调
+    // scope:操作列, done:操作的方法, callback:操作完成后的回调函数
     operationDone(scope, done, callback) {
       if (scope.row?._loading_ === undefined) {
         this.$set(scope.row, '_loading_', true);
       }
       scope.row._loading_ = true;
-      done((pass) => {
+      done((dealScope) => {
         scope.row._loading_ = false;
-        callback(pass);
-      });
+        dealScope && (scope = dealScope);
+        callback();
+      }, scope);
     }
   }
 };

@@ -2,7 +2,12 @@
 
 <template>
   <el-form :model="form" :rules="rules" ref="form" v-bind="$attrs">
-    <z-form-item v-for="(item, index) in formList" :key="item.label" v-bind="item" :form="form" />
+    <z-form-item
+      v-for="(item, index) in formList"
+      :key="item.label"
+      v-bind="item"
+      :form="form"
+    />
     <el-form-item>
       <el-button type="primary" @click="submit">提交</el-button>
     </el-form-item>
@@ -33,9 +38,9 @@ export default {
         {
           prop: 'name',
           label: '姓名',
+          render: 'z-input',
           option: {
             isTag: true,
-            name: 'item-input',
             attrs: {
               placeholder: '请输入姓名'
             }
@@ -45,19 +50,19 @@ export default {
         {
           prop: 'switch',
           label: '开关',
+          render: 'z-switch',
           option: {
-            isTag: true,
-            name: 'item-switch'
+            isTag: true
           },
           defaultValue: false
         },
         {
           prop: 'chekbox',
           label: 'sdas',
+          render: 'z-checkbox',
           option: {
             isTag: true,
             multiple: true,
-            name: 'item-checkbox',
             data: [
               { label: '18', value: '18', disabled: true },
               { label: '19', value: '19' },
@@ -70,9 +75,9 @@ export default {
         {
           prop: 'age',
           label: '年龄',
+          render: 'z-select',
           option: {
             isTag: true,
-            name: 'item-select',
             data: [
               { label: '18', value: '18', disabled: true },
               { label: '19', value: '19' },
@@ -87,9 +92,9 @@ export default {
         {
           prop: 'age1',
           label: '年龄1',
+          render: 'z-radio',
           option: {
             isTag: true,
-            name: 'item-radio',
             data: () => {
               return new Promise((resolve) => {
                 setTimeout(() => {

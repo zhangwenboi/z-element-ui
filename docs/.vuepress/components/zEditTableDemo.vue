@@ -1,11 +1,10 @@
 <!-- @format -->
 <template>
-  <div>
-    <zEditTable :form="form" :save="saveTable"></zEditTable>
-  </div>
+  <zEditTable :form="form" :save="saveTable" :delete="deleteTable">
+    <!-- <template #name="scope"> 12312312 </template> -->
+  </zEditTable>
 </template>
 <script>
-import { set } from 'vue';
 export default {
   name: 'zEditTableDemo',
   data() {
@@ -15,13 +14,17 @@ export default {
           return {
             date: `2016-05-02`,
             name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄',
+            address: '上海1',
             _view_: false
           };
         }),
         tableColumn: [
           { prop: 'date', label: '测试1' },
-          { prop: 'name', label: '测试2' },
+          {
+            prop: 'name',
+            label: '测试2',
+            'label-class-name': 'text-center'
+          },
           { prop: 'address', label: '测试3' }
         ],
         rules: {
@@ -30,19 +33,21 @@ export default {
         items: [
           {
             prop: 'date',
-            type: 'input',
+            render: 'z-input',
+            isTag: true,
             option: {
               placeholder: '请输入'
             }
           },
           {
             prop: 'name',
-            type: 'select',
+            render: 'z-select',
+            isTag: true,
             require: true,
             option: {
               placeholder: '请输入',
               clearable: true,
-              list: new Promise((resolve) => {
+              data: new Promise((resolve) => {
                 setTimeout(() => {
                   resolve([
                     {
@@ -54,43 +59,44 @@ export default {
                       value: '北京'
                     }
                   ]);
-                }, 20000);
+                }, 2000);
               })
             }
           },
           {
             prop: 'address',
-            type: 'select',
+            render: 'z-select',
+            isTag: true,
             option: {
               placeholder: '请输入',
               clearable: true,
               filter: true,
               multiple: true,
               multipleLimit: 1,
-              list: [
+              data: [
                 {
-                  label: 'da',
-                  list: [
+                  label: 'group1',
+                  data: [
                     {
-                      label: '上海',
-                      value: '上海'
+                      label: '上海1',
+                      value: '上海1'
                     },
                     {
-                      label: '北京',
-                      value: '北京'
+                      label: '北京1',
+                      value: '北京1'
                     }
                   ]
                 },
                 {
-                  label: '北京',
-                  list: [
+                  label: 'group2',
+                  data: [
                     {
-                      label: '上海',
-                      value: '上海'
+                      label: '上海2',
+                      value: '上海2'
                     },
                     {
-                      label: '北京',
-                      value: '北京'
+                      label: '北京2',
+                      value: '北京2'
                     }
                   ]
                 }
@@ -102,10 +108,27 @@ export default {
     };
   },
   methods: {
-    saveTable(callbalk) {
-      setTimeout(() => {
-        callbalk();
-      }, 1000);
+    saveTable(callbalk, data) {
+      new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(data);
+        }, 1000);
+      }).then((res) => {
+        const { row } = res;
+        data.row.address = Array.isArray(row.address)
+          ? row.address[0]
+          : row.address;
+        callbalk(data);
+      });
+    },
+    deleteTable(callback, data) {
+      new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(data);
+        }, 1000);
+      }).then((res) => {
+        callback(data);
+      });
     }
   }
 };
