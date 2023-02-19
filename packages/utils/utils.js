@@ -1,8 +1,7 @@
-/** @format */
-
+import attrsProps from "./attrs";
 // 驼峰转短横线
 export function kebabcase(v) {
-  return v.replace(/([^-])([A-Z])/g, '$1-$2').toLowerCase();
+  return v.replace(/([^-])([A-Z])/g, "$1-$2").toLowerCase();
 }
 
 // 短横线转驼峰
@@ -19,6 +18,7 @@ export function getProp(obj, key) {
 }
 
 // 数组是否存在 key
+
 export function includesKey(keys, key) {
   return keys.includes(kebabcase(key)) || keys.includes(humpcase(key));
 }
@@ -32,7 +32,9 @@ export function getIncludeAttrs(keys, target) {
   });
   return obj;
 }
-
+export const getProps = (propsKeys, attrs) => {
+  return getIncludeAttrs(attrsProps[propsKeys], attrs);
+};
 // 从目标对象排除指定属性
 export function getExcludeAttrs(keys, target) {
   let obj = {};
@@ -47,16 +49,21 @@ export function getCustomProps(props, attrs) {
   const propsKyes = Object.keys(props);
   const defaultProps = {};
   propsKyes.forEach((k) => {
-    defaultProps[k] = typeof props[k].default == 'function' ? props[k].default() : props[k].default;
+    defaultProps[k] =
+      typeof props[k].default == "function"
+        ? props[k].default()
+        : props[k].default;
   });
-  return attrs ? Object.assign(defaultProps, getIncludeAttrs(propsKyes, attrs)) : defaultProps;
+  return attrs
+    ? Object.assign(defaultProps, getIncludeAttrs(propsKyes, attrs))
+    : defaultProps;
 }
 
 // 生成一个 id
 export function guid() {
-  return 'xxxxxxxx'.replace(/[x]/g, (c) => {
+  return "xxxxxxxx".replace(/[x]/g, (c) => {
     let r = (Math.random() * 16) | 0;
-    let v = c == 'x' ? r : (r & 0x3) | 0x8;
+    let v = c == "x" ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
@@ -87,7 +94,7 @@ export const findRef = function (context, refName) {
 export const getArrItems = function (arr) {
   if (Array.isArray(arr)) {
     return arr.map((item) => {
-      item.prop = item.prop || '_uid_' + guid();
+      item.prop = item.prop || "_uid_" + guid();
       return item;
     });
   } else {

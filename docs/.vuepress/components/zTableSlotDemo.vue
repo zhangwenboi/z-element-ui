@@ -1,15 +1,30 @@
 <!-- @format -->
 
 <template>
-  <zTable class="z-table" :tableColumn="tableColumn" :tableData="tableData" :height="300" showIndex showFixed showOperation>
+  <zTable
+    class="z-table"
+    :tableColumn="tableColumn"
+    :tableData="tableData"
+    :height="300"
+    showIndex
+    showFixed
+    showOperation
+  >
     <template #name3="scope">
-      <div style="color: white; background-color: red; text-align: center" :style="scope.$index > 4 && 'background-color:blue;'">
+      <div
+        style="color: white; background-color: red; text-align: center"
+        :style="scope.$index > 4 && 'background-color:blue;'"
+      >
         {{ scope.$index }}
       </div>
     </template>
     <template #default="scope">
-      <el-button type="text" size="mini" @click="editTable(scope)">{{ scope.row._view_ ? '保存' : '编辑' }}</el-button>
-      <el-button type="text" size="mini" @click="deleteTable(scope)">删除</el-button>
+      <el-button type="text" size="mini" @click="editTable(scope)">{{
+        scope.row._view_ ? "保存" : "编辑"
+      }}</el-button>
+      <el-button type="text" size="mini" @click="deleteTable(scope)"
+        >删除</el-button
+      >
     </template>
   </zTable>
 </template>
@@ -68,6 +83,9 @@ export default {
     deleteTable(scope) {
       console.log('🚀 ~ scope', scope);
       this.tableData.splice(scope.$index, 1);
+    },
+    getScope(scope) {
+      console.log('🚀 ~ scope', scope);
     }
   }
 };

@@ -1,6 +1,12 @@
-<!-- @format -->
+
 <template>
-  <zEditTable :form="form" :save="saveTable" :delete="deleteTable">
+  <zEditTable
+    :form="form"
+    :save="saveTable"
+    :delete="deleteTable"
+    v-bind="paginationOption"
+    :frontPagination="true"
+  >
     <!-- <template #name="scope"> 12312312 </template> -->
   </zEditTable>
 </template>
@@ -9,11 +15,17 @@ export default {
   name: 'zEditTableDemo',
   data() {
     return {
+      paginationOption: {
+        pageSize: 10,
+        total: 20,
+        layout: "total, sizes, prev, pager, next, jumper",
+        disabled: false
+      },
       form: {
         tableData: new Array(20).fill(0).map((item, index) => {
           return {
-            date: `2016-05-02`,
-            name: '王小虎',
+            date: `2016-05-02${index}`,
+            name: `王小虎${index}`,
             address: '上海1',
             _view_: false
           };
@@ -25,7 +37,7 @@ export default {
             label: '测试2',
             'label-class-name': 'text-center'
           },
-          { prop: 'address', label: '测试3' }
+          { prop: 'address', label: '测试3', 'class-name': 'text-red' }
         ],
         rules: {
           name: [{ required: true, message: '请输入名称', trigger: 'change' }]
@@ -33,7 +45,9 @@ export default {
         items: [
           {
             prop: 'date',
-            render: 'z-input',
+            render: (data) => {
+              return <el-date-picker style={'width:100%'} v-model={data.scope.row['date']} value-format={'yyyy-MM-dd'}></el-date-picker>
+            },
             isTag: true,
             option: {
               placeholder: '请输入'
@@ -59,7 +73,7 @@ export default {
                       value: '北京'
                     }
                   ]);
-                }, 2000);
+                }, 4000);
               })
             }
           },
@@ -108,6 +122,12 @@ export default {
     };
   },
   methods: {
+    /******* 
+  * @description: 编辑
+  * @param {Function} callback  通信方法，接受一个参数,通知z-edit-table操作完成.
+  * @param {Object} data 操作的这条数据
+  * @return {void}
+  */
     saveTable(callbalk, data) {
       new Promise((resolve) => {
         setTimeout(() => {
@@ -118,15 +138,24 @@ export default {
         data.row.address = Array.isArray(row.address)
           ? row.address[0]
           : row.address;
+        //调用callback通知操作已经完成，在这之前可以调用一些接口进行数据操作
         callbalk(data);
       });
     },
+    /******* 
+     * @description: 删除操作
+     * @param {Function} callback
+     * @param {Object} data
+     * @return {void}
+     */
     deleteTable(callback, data) {
+      this.paginationOption.disabled = true;
       new Promise((resolve) => {
         setTimeout(() => {
           resolve(data);
         }, 1000);
       }).then((res) => {
+        this.paginationOption.disabled = false;
         callback(data);
       });
     }

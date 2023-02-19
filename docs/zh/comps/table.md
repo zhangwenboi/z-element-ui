@@ -11,7 +11,7 @@
 `z-table` 引入了 `el-pagination`，对于前端进行分页处理时有很大帮助，只需要传入数据即可，无需关注如何分页，如果不需要分页，
 传入 `:showPagination="false"`
 
-`el-pagination` 的配置项需要放到 `paginationOption` 中传入,也可以像传递 `tableData` 一样直接传入.
+`el-pagination` 的配置项可以像传递 `tableData` 一样直接传入.
 
 <ClientOnly><zTableDemo/></ClientOnly>
 
@@ -68,5 +68,5 @@
 | ---------------------------------------------------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------- |
 | #default => 操作列插槽                                           | 查看插槽 slot 操作列 | 使用时必须将showOperation设置为true                                                                        |
 | #[prop] => prop是需要的插槽                                      | 查看插槽 slot 操作列 | 直接在`z-table`中编写就行,如果需要多级表头建议直接使用`el-table`                                           |
-| #[headerprop] => headerprop 是需要插槽的表头格式为 prop+'header' | 查看插槽 slot 操作列 | 如果在使用表头点击事件等等,使用插槽是最好的方式了,如果仅仅需要排序过滤等功能,建议在`tableColumn`中进行配置 |
+| #[propheader] => propheader 是需要插槽的表头格式为 prop+'header' | 查看插槽 slot 操作列 | 如果在使用表头点击事件等等,使用插槽是最好的方式了,如果仅仅需要排序过滤等功能,建议在`tableColumn`中进行配置 |
 

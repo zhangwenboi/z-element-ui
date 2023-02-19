@@ -3,6 +3,11 @@
 table {
   margin: 0 !important;
 }
+
 .text-center {
   text-align: center;
+}
+
+.text-red {
+  color: #f56c6c;
 }

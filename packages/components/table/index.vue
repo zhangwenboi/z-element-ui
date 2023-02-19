@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <!-- @format -->
 
 <template>
@@ -5,7 +6,7 @@
     <el-table
       :data="currentData"
       style="width: 100%"
-      v-bind="$attrs"
+      v-bind="getProps('table', $attrs)"
       v-on="$listeners"
     >
       <!-- <template #empty class="flex align-middle">
@@ -38,13 +39,19 @@
       <el-table-column
         v-for="(item, index) in tableColumn"
         :key="item + index"
-        v-bind="item"
+        v-bind="getProps('tableColumn', item)"
       >
-        <template v-if="_showSlot(item.prop + 'header')" #header="scope">
-          <slot v-bind="scope" :name="item.prop + 'header'"></slot>
+        <template
+          v-if="_showSlot(item.prop + 'header')"
+          #header="{ column, $index }"
+        >
+          <slot v-bind="{ column, $index }" :name="item.prop + 'header'"></slot>
         </template>
-        <template v-if="_showSlot(item.prop)" #default="scope">
-          <slot v-bind="scope" :name="item.prop"></slot>
+        <template
+          v-if="_showSlot(item.prop)"
+          #default="{ row, column, $index }"
+        >
+          <slot v-bind="{ row, column, $index }" :name="item.prop"></slot>
         </template>
       </el-table-column>
       <!-- 操作 -->
@@ -61,13 +68,12 @@
     </el-table>
     <div v-if="showPagination" class="flex justify-end mt-2 mr-2">
       <el-pagination
-        v-bind="pgOption"
+        v-bind="getProps('pagination', $attrs)"
         @size-change="_pageSizeChange"
         @current-change="_pageIndexChange"
-        :total="$attrs.total || pgOption.total"
-        :currentPage="$attrs.currentPage || pgOption.currentPage"
-        :pageSizes="$attrs.pageSizes || pgOption.pageSizes"
-        :pageSize="$attrs.pageSize || pgOption.pageSize"
+        :total="frontPagination ? tableData.length : total"
+        :currentPage="currentPage"
+        :pageSize="pageSize"
       >
       </el-pagination>
     </div>
@@ -75,8 +81,9 @@
 </template>
 
 <script>
+import { getProps } from "../../utils/utils";
 export default {
-  name: 'ztable',
+  name: "zTable",
   components: {},
   props: {
     showCheckbox: { type: Boolean, default: false }, //是否开启多选框
@@ -86,76 +93,70 @@ export default {
     showIndex: { type: Boolean, default: false }, //是否包含序号
     operationLable: {
       type: String,
-      default: '操作'
+      default: "操作",
     },
     operationWidth: {
       type: String,
-      default: '120px'
+      default: "120px",
     },
-    paginationOption: {
-      type: Object,
-      default: () => {}
+    total: {
+      type: Number,
+      default: 0,
+    },
+    currentPage: {
+      type: Number,
+      default: 1,
+    },
+    pageSize: {
+      type: Number,
+      default: 10,
     },
     tableData: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     tableColumn: {
       type: Array,
       default: () => [],
-      required: true
+      required: true,
     }, //字段
     showPagination: {
       type: Boolean,
-      default: true
+      default: true,
     },
     frontPagination: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
+
   data() {
     return {
       currentData: [],
-      pgOption: {
-        layout: 'total,sizes, prev, pager, next',
-        pageSize: 10,
-        total: 0,
-        currentPage: 1
-      }
     };
   },
   watch: {
     tableData: {
       handler(val) {
-        if (!val) return;
+        if (!val || !val.length) return;
         this._updateTableData(val);
       },
-      immediate: true
-    },
-    paginationOption: {
-      handler(val) {
-        this.pgOption = {
-          ...this.pgOption,
-          ...val
-        };
-      },
-      immediate: true
+      immediate: true,
     },
     showPagination: {
       handler() {
         this._updateTableData(this.tableData);
-      }
-    }
+      },
+    },
   },
   methods: {
     _updateTableData(val) {
+      console.log(this.pageSize, this.currentPage);
       if (this.showPagination && this.frontPagination) {
         this.currentData = val.slice(
-          this.pgOption.pageSize * (this.pgOption.currentPage - 1),
-          this.pgOption.pageSize * this.pgOption.currentPage
+          this.pageSize * (this.currentPage - 1),
+          this.pageSize * this.currentPage
         );
-        this.$set(this.pgOption, 'total', val.length);
       } else {
         this.currentData = val;
       }
@@ -166,19 +167,20 @@ export default {
     _pageIndexChange(page) {
       if (this.showPagination && this.frontPagination) {
         this.currentData = this.tableData.slice(
-          (page - 1) * this.pgOption.pageSize,
-          page * this.pgOption.pageSize
+          (page - 1) * this.pageSize,
+          page * this.pageSize
         );
       }
-      this.pgOption.currentPage = page;
-      this.$emit('page-change', page);
+      this.$emit("page-change", page);
     },
     _pageSizeChange(pageSize) {
       this.currentData = this.tableData.slice(0, pageSize);
-      this.pgOption.pageSize = pageSize;
-      this.$emit('page-size-change', pageSize);
-    }
-  }
+      this.$emit("page-size-change", pageSize);
+    },
+    getProps(type, attrs) {
+      return getProps(type, attrs);
+    },
+  },
 };
 </script>
 
@@ -188,15 +190,19 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .flex {
   display: flex;
 }
+
 .justify-end {
   justify-content: flex-end;
 }
+
 .mt-2 {
   margin-top: 0.5rem /* 8px */;
 }
+
 .mr-2 {
   margin-right: 0.5rem /* 8px */;
 }

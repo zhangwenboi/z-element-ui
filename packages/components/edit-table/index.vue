@@ -5,14 +5,13 @@
     <zTable
       ref="tableEditor"
       showOperation
-      :paginationOption="paginationOption"
       :tableColumn="form.tableColumn"
       stripe
       highlight-current-row
-      :tableData="form.tableData"
-      checkbox
-      :total="form.tableData.length"
+      :tableData="tableData"
+      v-bind="getProps('tableExtension', $attrs)"
     >
+      <!-- 给表格添加如同z-table一样的配置项 -->
       <template #default="scope">
         <template v-if="scope.row._loading_">
           <el-button type="text" size="mini" icon="el-icon-loading">
@@ -20,7 +19,7 @@
         </template>
         <template v-else>
           <el-button type="text" size="mini" @click="editTable(scope)">{{
-            scope.row._view_ ? '保存' : '编辑'
+            scope.row._view_ ? "保存" : "编辑"
           }}</el-button>
           <el-button type="text" size="mini" @click="deleteTable(scope)"
             >删除</el-button
@@ -33,7 +32,7 @@
       >
         {{ column.label }}<span class="text-red" :key="index"> * </span>
       </template>
-      <template v-for="(item, index) in form.items" #[item.prop]="scope">
+      <template v-for="item in form.items" #[item.prop]="scope">
         <el-form-item
           v-if="scope.row._view_"
           :key="`tableData.${scope.$index}.${item.prop}`"
@@ -50,10 +49,12 @@
           ></zRenderComponents>
         </el-form-item>
         <template v-else-if="_showSlot(item.prop)">
-          <slot :name="item.prop" :scope="scope"></slot>
+          <div :key="`tableData.${scope.$index}.${item.prop}`">
+            <slot :name="item.prop" :scope="scope"></slot>
+          </div>
         </template>
         <template v-else>
-          <span>{{ scope.row[item.prop] }}</span>
+          <span :key="item.prop">{{ scope.row[item.prop] }}</span>
         </template>
       </template>
     </zTable>
@@ -61,54 +62,47 @@
 </template>
 
 <script>
-import zTable from '../table/index.vue';
-import zFormItem from '../form-item/index.vue';
-import zRenderComponents from '../render-component';
+import zTable from "../table/index.vue";
+import zRenderComponents from "../render-component";
+import { getProps } from "../../utils/utils";
+
 export default {
-  name: 'zEditTable',
+  name: "zEditTable",
   components: {
-    zFormItem,
     zTable,
-    zRenderComponents
+    zRenderComponents,
   },
+
   computed: {
     requiredFields: (that) =>
       that.form?.items
         ?.filter((e) => e.require)
-        .map((e) => e.prop + 'header') || []
+        .map((e) => e.prop + "header") || [],
+    tableData: (that) => that.form?.tableData || [],
   },
   props: {
     form: {
       type: Object,
       required: true,
-      default: () => ({})
+      default: () => ({}),
     },
     save: {
       type: Function,
-      default: () => {}
+      default: () => { },
     },
     delete: {
       type: Function,
-      default: () => {}
+      default: () => { },
     },
-    paginationOption: {
-      type: Object,
-      default: () => ({
-        layout: 'total, sizes, prev, pager, next, jumper',
-        pageSizes: [10, 20, 30, 40, 50],
-        pageSize: 10,
-        total: 0
-      })
-    }
   },
   methods: {
     _showSlot(prop) {
       return this.$scopedSlots[prop] || this.$slots[prop];
     },
     editTable(scope) {
-      console.log(this.form);
+      console.log(getProps("tableExtension", this.$attrs));
       if (scope.row?._view_ === undefined) {
-        this.$set(scope.row, '_view_', false);
+        this.$set(scope.row, "_view_", false);
       }
       if (scope.row?._view_) {
         this.validateRow(scope.$index, () => {
@@ -122,10 +116,19 @@ export default {
         scope.row._view_ = true;
       }
     },
+    getProps(type, attrs) {
+      return getProps(type, attrs);
+    },
     deleteTable(scope) {
+      const index =
+        this.tableData.indexOf(scope.row) !== -1
+          ? this.tableData.indexOf(scope.row)
+          : this.$attrs.frontPagination
+            ? this.$attrs.currentPage * this.$attrs.pageSize
+            : scope.$index;
       this.operationDone(scope, this.delete, () => {
-        this.form.tableData.splice(scope.$index, 1);
-        this.$refs.tableEditor._updateTableData(this.form.tableData);
+        this.tableData.splice(index, 1);
+        console.log("🚀 ~ this.tableData", this.tableData);
       });
     },
     validateRow(index, callback) {
@@ -133,7 +136,7 @@ export default {
         .filter((e) => e.require)
         .map((e) => `tableData.${index}.${e.prop}`);
       let ok = true;
-      this.$refs['editform'].validateField(props, (errMsg) => {
+      this.$refs["editform"].validateField(props, (errMsg) => {
         if (errMsg) {
           ok = false;
         }
@@ -144,7 +147,7 @@ export default {
     // scope:操作列, done:操作的方法, callback:操作完成后的回调函数
     operationDone(scope, done, callback) {
       if (scope.row?._loading_ === undefined) {
-        this.$set(scope.row, '_loading_', true);
+        this.$set(scope.row, "_loading_", true);
       }
       scope.row._loading_ = true;
       done((dealScope) => {
@@ -152,8 +155,8 @@ export default {
         dealScope && (scope = dealScope);
         callback();
       }, scope);
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
