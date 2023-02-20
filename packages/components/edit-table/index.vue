@@ -143,8 +143,13 @@ export default {
       });
       ok && callback && callback();
     },
-    // 操作完成后的回调
-    // scope:操作列, done:操作的方法, callback:操作完成后的回调函数
+    /******* 
+     * @description: 
+     * @param {*} scope 操作列
+     * @param {*} done 操作的方法
+     * @param {*} callback 操作完成后的回调函数
+     * @return {*}
+     */
     operationDone(scope, done, callback) {
       if (scope.row?._loading_ === undefined) {
         this.$set(scope.row, "_loading_", true);

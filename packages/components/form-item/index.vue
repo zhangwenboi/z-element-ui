@@ -15,8 +15,8 @@
         v-if="render"
         :render="render"
         v-bind="option"
-        v-on="option.on"
-        :is-tag="option.isTag"
+        v-on="option?.on"
+        :is-tag="isTag"
         :ref="prop || 'component'"
         v-model="form[prop]"
       >
@@ -65,17 +65,27 @@ export default {
   },
   inject: ['elForm'],
   props: {
-    prop: String,
+    prop: {
+      type: String,
+      required: true
+    },
     render: [String, Function],
     label: [String, Number, Object, Array, Function],
     option: {
       type: Object,
-      required: true
+      default: () => ({
+        slots: {},
+        on: {}
+      })
     },
     defaultValue: {},
     form: {
       type: Object,
       default: () => ({})
+    },
+    isTag: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -83,7 +93,7 @@ export default {
       return getPropByPath(this.elForm.model, this.prop, true) || {};
     },
     slots() {
-      let slots = this.option.slots || {};
+      let slots = this.option?.slots || {};
       let scopedSlots = {};
       let staticSlots = {};
       if (slots.constructor == Object) {
@@ -106,6 +116,7 @@ export default {
       immediate: true,
       handler(newv, oldv) {
         if (newv !== oldv) {
+          console.log(this.defaultValue, this.prop)
           this.setFieldDefaultValue();
         }
       }

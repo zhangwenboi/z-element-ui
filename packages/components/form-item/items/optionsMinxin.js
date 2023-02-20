@@ -8,7 +8,7 @@ export default {
         return { label: 'label', value: 'value' };
       }
     },
-    data: { type: [Array, Function, Promise], default: () => [] }
+    data: { type: [Array, Function, Promise, String], default: () => [] }
   },
   data() {
     return {

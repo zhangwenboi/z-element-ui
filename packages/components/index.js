@@ -10,6 +10,7 @@ import TimePicker from './form-item/items/timePicker.vue';
 import Switch from './form-item/items/switch.vue';
 import EditTable from './edit-table/index.vue';
 import Theme from './theme/index.vue';
+import FormItem from './form-item/index.vue';
 import { config } from '../utils/config';
 export const comList = {
   Table,
@@ -21,7 +22,8 @@ export const comList = {
   TimePicker,
   Switch,
   EditTable,
-  Theme
+  Theme,
+  FormItem
 };
 const install = function (Vue) {
   // 判断是否安装

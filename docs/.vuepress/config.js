@@ -1,10 +1,7 @@
 /** @format */
 module.exports = {
   chainWebpack(config) {
-    config.resolve.alias.set(
-      'core-js/library/fn',
-      'core-js/features'
-    );
+    config.resolve.alias.set('core-js/library/fn', 'core-js/features');
   },
   locales: {
     // 键名是该语言所属的子路径
@@ -12,14 +9,12 @@ module.exports = {
     '/': {
       lang: 'en-US', // 将会被设置为 <html> 的 lang 属性
       title: 'z-element-ui',
-      description:
-        'Based on Vue2 & Element-UI encapsulation, fully data-driven, ready to use out of the box!'
+      description: 'Based on Vue2 & Element-UI encapsulation, fully data-driven, ready to use out of the box!'
     },
     '/zh/': {
       lang: 'zh-CN',
       title: 'z-element-ui',
-      description:
-        '基于element-ui & vue2进行封装,极简风格，开箱即用.'
+      description: '基于element-ui & vue2进行封装,极简风格，开箱即用.'
     }
   },
 
@@ -82,25 +77,16 @@ module.exports = {
           {
             title: '开始', // 必要的
             collapsable: false, // 可选的, 默认值是 true,
-            children: [
-              '/zh/guide/start',
-              '/zh/guide/import'
-            ]
+            children: ['/zh/guide/start', '/zh/guide/import']
           },
           {
             title: '组件', // 必要的
             collapsable: false, // 可选的, 默认值是 true,
-            children: [
-              '/zh/comps/table',
-              '/zh/comps/edit-table'
-            ]
+            children: ['/zh/comps/table', '/zh/comps/edit-table', '/zh/comps/form-item']
           }
         ]
       }
     }
   },
-  plugins: [
-    '@vuepress/back-to-top',
-    '@xiaopanda/vuepress-plugin-code-copy'
-  ]
+  plugins: ['@vuepress/back-to-top', '@xiaopanda/vuepress-plugin-code-copy']
 };

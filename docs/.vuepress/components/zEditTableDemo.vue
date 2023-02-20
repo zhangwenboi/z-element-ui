@@ -7,7 +7,6 @@
     v-bind="paginationOption"
     :frontPagination="true"
   >
-    <!-- <template #name="scope"> 12312312 </template> -->
   </zEditTable>
 </template>
 <script>
@@ -45,6 +44,7 @@ export default {
         items: [
           {
             prop: 'date',
+            // jsx写法
             render: (data) => {
               return <el-date-picker style={'width:100%'} v-model={data.scope.row['date']} value-format={'yyyy-MM-dd'}></el-date-picker>
             },

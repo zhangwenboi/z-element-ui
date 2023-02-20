@@ -6,5 +6,5 @@ import ElementUI from 'element-ui/lib/index';
 import zElementUI from '../../packages/index';
 export default ({ Vue }) => {
   Vue.use(ElementUI, { size: 'mini' });
-  zElementUI.install(Vue);
+  Vue.use(zElementUI);
 };
