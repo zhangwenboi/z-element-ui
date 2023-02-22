@@ -28,7 +28,6 @@
     </template>
   </zTable>
 </template>
-
 <script>
 export default {
   name: 'zTableSlotDemo',

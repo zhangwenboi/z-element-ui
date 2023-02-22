@@ -1,35 +1,21 @@
-<!-- @format -->
-
 <template>
-  <el-form
-    :model="form"
-    :rules="rules"
-    ref="form"
-    v-bind="$attrs"
-    :label-width="'80px'"
-  >
-    <zFormItem
-      v-for="(item, index) in formList"
-      :key="item.label"
-      v-bind="item"
-      :form="form"
-    >
-      <template v-if="item.prop === 'name'" #label="scope">
+  <el-form :model="form" :rules="rules" ref="form" v-bind="$attrs" :label-width="'180px'" label-suffix=":->">
+    <zFormItem v-for="(item, index) in formList" :key="item.label" v-bind="item" :form="form">
+      <template v-if="item.prop === 'name'" #label>
         <span>label插槽</span>
       </template>
     </zFormItem>
     <el-form-item>
       <el-button type="primary" @click="submit">提交</el-button>
     </el-form-item>
-    <template #append>
-      <el-button>append</el-button>
-    </template>
   </el-form>
 </template>
 <script>
+import zCustomtDemo from './zCustomtDemo.vue';
 export default {
   name: 'zFormItemDemo',
   components: {
+    zCustomtDemo
   },
   data() {
     return {
@@ -43,18 +29,53 @@ export default {
       formList: [
         {
           prop: 'name',
-          render: 'z-input',
+          render: 'el-input',
           option: {
-            placeholder: '请输入姓名',
             class: 'border',
             style: {
               width: '200px'
             },
-            slots: {
-              append: 'append'
+          },
+          slots: {
+            suffix: () => <i>尾部</i>,
+            prepend: () => 'Http:/'
+          },
+          on: {
+            input: (e) => {
+              console.log('input', e)
+            },
+            change: (e) => {
+              console.log('change', e)
             }
           },
           defaultValue: '1'
+        },
+        {
+          prop: 'check_in',
+          render: 'el-time-select',
+          label: '使用el-time-select',
+          option: {
+            'picker-options': {
+              start: '08:30',
+              step: '00:15',
+              end: '10:30'
+            },
+            placeholder: '选择打卡时间1'
+          },
+        },
+        {
+          prop: 'check_num',
+          render: 'el-input-number',
+          label: '使用el-input-number',
+          option: {
+            'min': 1,
+            'max': 10,
+            'step': 1,
+            'step-strictly': true,
+            'precision': 0,
+            'controls-position': 'right',
+            'placeholder': '请输入打卡次数'
+          }
         },
         {
           prop: 'switch',
@@ -65,7 +86,7 @@ export default {
         },
         {
           prop: 'chekbox',
-          label: 'sdas',
+          label: '使用z-checkbox',
           render: 'z-checkbox',
           option: {
             multiple: true,
@@ -76,6 +97,11 @@ export default {
             ]
           },
           defaultValue: ['20']
+        },
+        {
+          prop: 'custom-select',
+          label: '引入自定义组件',
+          render: 'zCustomtDemo',
         },
         {
           prop: 'age',
@@ -95,9 +121,7 @@ export default {
           render: 'z-select',
           option: {
             data: '1, 2, 3',
-            attrs: {
-              placeholder: '请输入年龄'
-            }
+            placeholder: '请输入年龄'
           },
           defaultValue: '1'
         },

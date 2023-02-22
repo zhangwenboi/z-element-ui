@@ -2,12 +2,7 @@
 
 <template>
   <el-form :model="form" :rules="rules" ref="form" v-bind="$attrs">
-    <z-form-item
-      v-for="(item, index) in formList"
-      :key="item.label"
-      v-bind="item"
-      :form="form"
-    />
+    <z-form-item v-for="(item, index) in formList" :key="item.label" v-bind="item" :form="form" />
     <el-form-item>
       <el-button type="primary" @click="submit">提交</el-button>
     </el-form-item>
@@ -38,7 +33,7 @@ export default {
         {
           prop: 'name',
           label: '姓名',
-          render: 'z-input',
+          render: 'el-input',
           option: {
             isTag: true,
             attrs: {

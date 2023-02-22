@@ -1,15 +1,8 @@
 <!-- @format -->
 
 <template>
-  <el-select
-    v-model="Value"
-    @change="changeData"
-    class="z-select"
-    v-loading="optionsLoading"
-    v-bind="$attrs"
-    v-on="funcs"
-    :placeholder="$attrs.placeholder || '请选择'"
-  >
+  <el-select v-model="Value" class="z-select" v-loading="optionsLoading" v-bind="$attrs" v-on="funcs"
+    :placeholder="$attrs.placeholder || '请选择'">
     <template #prefix>
       <slot name="prefix"></slot>
     </template>
@@ -19,47 +12,21 @@
     <template #default>
       <slot>
         <div class="z-filter-item" v-if="filter">
-          <el-input
-            v-model="filterText"
-            placeholder="输入关键字进行过滤"
-            size="mini"
-            clearable
-          ></el-input>
+          <el-input v-model="filterText" placeholder="输入关键字进行过滤" size="mini" clearable></el-input>
         </div>
-        <el-option
-          class="z-empty-option"
-          v-if="filter && filterOptions?.length == 0"
-          :label="filterEmptyText"
-          :value="filterEmptyText"
-          disabled
-        >
+        <el-option class="z-empty-option" v-if="filter && filterOptions?.length == 0" :label="filterEmptyText"
+          :value="filterEmptyText" disabled>
         </el-option>
         <template v-if="isGroup">
-          <el-option-group
-            v-for="group in filterOptions"
-            :key="group.label"
-            v-bind="filterAttr(group, 'group')"
-          >
-            <el-option
-              v-for="(option, index) of group.data || []"
-              :key="option.value"
-              v-bind="filterAttr(option, 'option')"
-            >
-              <slot
-                name="option"
-                :option="option"
-                :index="index"
-                :group="group"
-              ></slot>
+          <el-option-group v-for="group in filterOptions" :key="group.label" v-bind="filterAttr(group, 'group')">
+            <el-option v-for="(option, index) of group.data || []" :key="option.value"
+              v-bind="filterAttr(option, 'option')">
+              <slot name="option" :option="option" :index="index" :group="group"></slot>
             </el-option>
           </el-option-group>
         </template>
         <template v-else>
-          <el-option
-            v-for="(option, index) of filterOptions"
-            :key="option.value"
-            v-bind="filterAttr(option, 'option')"
-          >
+          <el-option v-for="(option, index) of filterOptions" :key="option.value" v-bind="filterAttr(option, 'option')">
             <!-- 在slot上绑定参数，在函数形式渲染的时候就会将这些当作参数传入函数。例如下面的方式就会被(e)=>{return(<div> 123 </div>)} e接受-->
             <slot name="option" :option="option" :index="index"></slot>
           </el-option>
@@ -70,7 +37,6 @@
 </template>
 
 <script>
-import formMixin from './form-mixin';
 import optionMixin from './optionsMinxin';
 import { getProp, getIncludeAttrs } from '../../../utils/utils';
 
@@ -78,7 +44,7 @@ const optionPropsKeys = ['value', 'label', 'disabled', 'style', 'class'];
 const groupPropsKeys = ['label', 'disabled', 'style', 'class'];
 export default {
   name: 'zSelect',
-  mixins: [formMixin, optionMixin],
+  mixins: [optionMixin],
   components: {},
   props: {
     value: { type: [Array, Number, String], default: '' },
@@ -124,6 +90,18 @@ export default {
       } else {
         return '';
       }
+    },
+    funcs() {
+      let funcitonList = {};
+      for (const key in this.$attrs) {
+        if (
+          Object.hasOwnProperty.call(this.$attrs, key) &&
+          typeof this.$attrs[key] === 'function'
+        ) {
+          funcitonList[key] = this.$attrs[key];
+        }
+      }
+      return funcitonList;
     }
   },
   methods: {
@@ -150,6 +128,7 @@ export default {
   background-color: rgba(255, 255, 255, 0.5);
   border-radius: 4px;
 }
+
 .z-select .el-loading-mask .el-loading-spinner {
   top: 0px;
   margin-top: 0px;
@@ -158,6 +137,7 @@ export default {
   justify-content: center;
   height: 100%;
 }
+
 .z-select .circular {
   width: 16px !important;
   height: 16px !important;
@@ -167,6 +147,7 @@ export default {
   padding: 0px 10px;
   margin-bottom: 10px;
 }
+
 .z-empty-option {
   text-align: center;
 }

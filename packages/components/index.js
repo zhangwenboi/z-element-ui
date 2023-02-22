@@ -3,7 +3,6 @@
 import Table from './table/index.vue';
 import Checkbox from './form-item/items/checkbox.vue';
 import Radio from './form-item/items/radio.vue';
-import Input from './form-item/items/input.vue';
 import Select from './form-item/items/select.vue';
 import Datepicker from './form-item/items/datePicker.vue';
 import TimePicker from './form-item/items/timePicker.vue';
@@ -16,7 +15,6 @@ export const comList = {
   Table,
   Checkbox,
   Radio,
-  Input,
   Select,
   Datepicker,
   TimePicker,

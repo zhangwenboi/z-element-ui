@@ -39,7 +39,6 @@
 
 <script>
 import optionsMinxin from "./optionsMinxin";
-import formMixin from "./form-mixin";
 import { getIncludeAttrs } from "../../../utils/utils";
 
 const propsKeys = [
@@ -56,7 +55,7 @@ const groupPropsKyes = ["size", "disabled", "text-color", "fill"];
 export default {
   name: "zRadio",
   inheritAttrs: false,
-  mixins: [optionsMinxin, formMixin],
+  mixins: [optionsMinxin],
   props: {
     value: {
       type: [String, Number, Boolean],

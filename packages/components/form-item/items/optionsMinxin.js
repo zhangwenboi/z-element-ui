@@ -16,7 +16,20 @@ export default {
       optionsLoading: false
     };
   },
-
+  model: {
+    value: 'Value',
+    event: 'input'
+  },
+  computed: {
+    Value: {
+      get() {
+        return this.value;
+      },
+      set(val) {
+        this.$emit('input', val);
+      }
+    }
+  },
   watch: {
     data: {
       immediate: true,

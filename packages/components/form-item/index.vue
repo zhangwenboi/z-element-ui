@@ -1,37 +1,18 @@
 <!-- @format -->
 
 <template>
-  <el-form-item
-    v-bind="$attrs"
-    :prop="prop"
-    class="z-form-item"
-    ref="elFormItem"
-  >
+  <el-form-item v-bind="$attrs" :prop="prop" class="z-form-item" ref="elFormItem">
     <slot slot="label" name="label">
-      <render-component v-if="label" :render="label" />
+      <render-component v-if="label" :render="labelSuffix" />
     </slot>
     <slot>
-      <render-component
-        v-if="render"
-        :render="render"
-        v-bind="option"
-        v-on="option?.on"
-        :is-tag="isTag"
-        :ref="prop || 'component'"
-        v-model="form[prop]"
-      >
-        <template v-for="(slot, staticName) in slots.staticSlots" #[staticName]>
-          <render-component :key="staticName" :render="slot" />
+      <render-component v-if="render" :render="render" v-bind="option" v-on="on" :is-tag="isTag"
+        :ref="prop || 'component'" v-model="form[prop]" :placeholder="placeholder">
+        <template v-for="(slotItem, staticName) in slot.staticSlots" #[staticName]>
+          <render-component :key="staticName" :render="slotItem" />
         </template>
-        <template
-          v-for="(slot, scopedName) in slots.scopedSlots"
-          #[scopedName]="slotProps"
-        >
-          <render-component
-            :key="scopedName"
-            :render="slot"
-            v-bind="slotProps"
-          />
+        <template v-for="(slotItem, scopedName) in slot.scopedSlots" #[scopedName]="slotProps">
+          <render-component :key="scopedName" :render="slotItem" v-bind="slotProps" />
         </template>
       </render-component>
     </slot>
@@ -39,12 +20,13 @@
 </template>
 
 <script>
+const inputType = ['input', 'textarea', 'number', 'password', 'transfer'];
+const selectType = ['select', 'cascader', 'time-select', 'time-picker', 'date-picker'];
 import renderComponent from '../render-component.jsx';
 import { getPropByPath } from 'element-ui/src/utils/util';
 import zTable from '../table/index.vue';
 import zCheckbox from './items/checkbox.vue';
 import zRadio from './items/radio.vue';
-import zInput from './items/input.vue';
 import zSelect from './items/select.vue';
 import zDatepicker from './items/datePicker.vue';
 import zTimePicker from './items/timePicker.vue';
@@ -57,7 +39,6 @@ export default {
     zTable,
     zCheckbox,
     zRadio,
-    zInput,
     zSelect,
     zDatepicker,
     zTimePicker,
@@ -74,8 +55,7 @@ export default {
     option: {
       type: Object,
       default: () => ({
-        slots: {},
-        on: {}
+
       })
     },
     defaultValue: {},
@@ -86,14 +66,36 @@ export default {
     isTag: {
       type: Boolean,
       default: true
+    },
+    on: {
+      type: Object,
+      default: () => ({})
+    },
+    slots: {
+      type: Object,
+      default: () => ({})
     }
   },
   computed: {
     field() {
       return getPropByPath(this.elForm.model, this.prop, true) || {};
     },
-    slots() {
-      let slots = this.option?.slots || {};
+    placeholder: {
+      get() {
+        if (this.option.placeholder) return this.option.placeholder;
+        if (this.render.constructor === String) {
+          const label = this.label || '';
+          return inputType.some((e) => this.render.includes(e)) ? '请输入' + label : selectType.some((e) => this.render.includes(e)) ? '请选择' + label : '';
+        }
+        return this.option.placeholder || '';
+      }
+    },
+    labelSuffix() {
+      if (this.label.constructor === String) return this.label + (this.elForm?.labelSuffix || '')
+      return this.label
+    },
+    slot() {
+      let slots = this.slots || {};
       let scopedSlots = {};
       let staticSlots = {};
       if (slots.constructor == Object) {
@@ -116,7 +118,6 @@ export default {
       immediate: true,
       handler(newv, oldv) {
         if (newv !== oldv) {
-          console.log(this.defaultValue, this.prop)
           this.setFieldDefaultValue();
         }
       }
@@ -125,11 +126,7 @@ export default {
 
   methods: {
     setFieldDefaultValue() {
-      if (
-        this.prop &&
-        this.prop.indexOf('_uid_') === -1 &&
-        !this.field.o.hasOwnProperty(this.field.k)
-      ) {
+      if (this.prop && this.prop.indexOf('_uid_') === -1 && !this.field.o.hasOwnProperty(this.field.k)) {
         this.$set(this.field.o, this.field.k, this.defaultValue);
       }
     }

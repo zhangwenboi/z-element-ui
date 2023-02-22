@@ -4,12 +4,33 @@
   <span v-if="optionsLoading">
     <i class="el-icon-loading" style="width: inherit; height: inherit"></i>
   </span>
-  <el-checkbox-group v-model="Value" v-else-if="multiple" ref="ref" v-bind="getProps($attrs, 'group')" v-on="$listeners">
-    <component :is="is" v-for="(option, index) of proxyOptions" v-bind="getProps(option)" :key="option.value" :label="option.value">
-      <slot name="option" :option="option" :index="index">{{ option.label }}</slot>
+  <el-checkbox-group
+    v-model="Value"
+    v-else-if="multiple"
+    ref="ref"
+    v-bind="getProps($attrs, 'group')"
+    v-on="$listeners"
+  >
+    <component
+      :is="is"
+      v-for="(option, index) of proxyOptions"
+      v-bind="getProps(option)"
+      :key="option.value"
+      :label="option.value"
+    >
+      <slot name="option" :option="option" :index="index">{{
+        option.label
+      }}</slot>
     </component>
   </el-checkbox-group>
-  <component v-model="Value" v-else :is="is" ref="ref" v-bind="getProps($attrs)" v-on="$listeners">
+  <component
+    v-model="Value"
+    v-else
+    :is="is"
+    ref="ref"
+    v-bind="getProps($attrs)"
+    v-on="$listeners"
+  >
     <template v-slot:default>
       <slot name="default" />
     </template>
@@ -28,13 +49,8 @@ export default {
   name: 'zCheckbox',
   inheritAttrs: false,
   mixins: [optionsMinxin],
-  model: {
-    value: 'Value',
-    event: 'input'
-  },
-  data() {
-    return { Value: this.value };
-  },
+
+
   props: {
     value: {
       type: [String, Number, Boolean, Array],

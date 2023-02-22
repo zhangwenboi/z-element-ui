@@ -44,23 +44,23 @@
 
 ## Table Attributes
 
-| 属性                   |                类型                |                                            默认值                                             | 说明                                                                                                                            |
-| :--------------------- | :--------------------------------: | :-------------------------------------------------------------------------------------------: | ------------------------------------------------------------------------------------------------------------------------------- |
-| **tableData**          | Array<{prop:string, label:string}> |                                              [ ]                                              | 表格数据                                                                                                                        |
-| **tableColumn**        |               Array                |                                              [ ]                                              | 表格项                                                                                                                          |
+| 属性                   |                类型                |                            默认值                            | 说明                                                         |
+| :--------------------- | :--------------------------------: | :----------------------------------------------------------: | ------------------------------------------------------------ |
+| **tableData**          | Array<{prop:string, label:string}> |                             [ ]                              | 表格数据                                                     |
+| **tableColumn**        |               Array                |                             [ ]                              | 表格项                                                       |
 | paginationOption       |               Object               | {\"layout\": \"total,sizes,prev,pager,next\", \"pageSize\":10, "total\":0, \"currentPage\":1} | 分页配置集合，支持所有的 pagination 配置项[el-pagination组件 \| Element](https://element.eleme.cn/#/zh-CN/component/pagination) |
-| layout                 |               String               |                                  total,sizes,prev,pager,next                                  | 组件布局，子组件名用逗号分隔                                                                                                    |
-| pageSize               |               Number               |                                              10                                               | 每页显示条目个数                                                                                                                |
-| total                  |               Number               |                                               0                                               | 总条目数                                                                                                                        |
-| currentPage            |               Number               |                                               1                                               | 当前页数                                                                                                                        |
-| showIndex              |              Boolean               |                                             false                                             | 是否展示序号                                                                                                                    |
-| showOperation          |              Boolean               |                                             false                                             | 是否展示操作列                                                                                                                  |
-| showExpand             |              Boolean               |                                             false                                             | 是否展示展开列                                                                                                                  |
-| showFixed              |              Boolean               |                                             false                                             | 是否固定列                                                                                                                      |
-| showCheckbox           |              Boolean               |                                             false                                             | 是否开启多选框                                                                                                                  |
-| ***page-change***      |              Function              |                                              ...                                              | 页码改变时的钩子函数                                                                                                            |
-| ***page-size-change*** |              Function              |                                              ...                                              | 页面展示数量变化时的钩子函数                                                                                                    |
-| ......                 |               ......               |                                            ......                                             | ....其他属性,请参考[el-table组件 \| Element](https://element.eleme.cn/#/zh-CN/component/table)                                  |
+| layout                 |               String               |                 total,sizes,prev,pager,next                  | 组件布局，子组件名用逗号分隔                                 |
+| pageSize               |               Number               |                              10                              | 每页显示条目个数                                             |
+| total                  |               Number               |                              0                               | 总条目数                                                     |
+| currentPage            |               Number               |                              1                               | 当前页数                                                     |
+| showIndex              |              Boolean               |                            false                             | 是否展示序号                                                 |
+| showOperation          |              Boolean               |                            false                             | 是否展示操作列                                               |
+| showExpand             |              Boolean               |                            false                             | 是否展示展开列                                               |
+| showFixed              |              Boolean               |                            false                             | 是否固定列                                                   |
+| showCheckbox           |              Boolean               |                            false                             | 是否开启多选框                                               |
+| ***page-change***      |              Function              |                             ...                              | 页码改变时的钩子函数                                         |
+| ***page-size-change*** |              Function              |                             ...                              | 页面展示数量变化时的钩子函数                                 |
+| ......                 |               ......               |                            ......                            | ....其他属性,请参考[el-table组件 \| Element](https://element.eleme.cn/#/zh-CN/component/table#table-attributes) |
 
 ## Slot 列表
 

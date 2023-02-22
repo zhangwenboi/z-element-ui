@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <template>
-  <el-switch v-model="Value" @change="changeData" v-bind="$attrs" v-on="funcs"> </el-switch>
+  <el-switch v-model="Value" v-bind="$attrs" v-on="funcs"> </el-switch>
 </template>
 
 <script>
@@ -16,11 +16,6 @@ export default {
       default: true
     }
   },
-  data() {
-    return {};
-  },
-  computed: {},
-  mounted() {},
-  methods: {}
+
 };
 </script>

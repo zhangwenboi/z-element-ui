@@ -82,7 +82,7 @@ module.exports = {
           {
             title: '组件', // 必要的
             collapsable: false, // 可选的, 默认值是 true,
-            children: ['/zh/comps/table', '/zh/comps/edit-table', '/zh/comps/form-item']
+            children: ['/zh/comps/table', '/zh/comps/edit-table', '/zh/comps/form-item', '/zh/comps/select']
           }
         ]
       }
