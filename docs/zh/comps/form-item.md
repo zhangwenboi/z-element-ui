@@ -42,7 +42,7 @@
 
 放入`on` 对象中的方法,都将被绑定到当前组件上,例如`el-input` 的`input`事件,可以这样配置:
 
-```
+```js
 on:{
 	input:(e)=>{
 		console.log(e)
@@ -54,7 +54,7 @@ on:{
 
 `slots` 的作用是用来补充数据配置状态下 `z-form-item` 无法完成的功能,例如`el-input` 中的 `suffix` 插槽等,例如:
 
-```
+```js
 slots:{
 	suffix:()=> <i>这是尾部文字<i>,
 	prepend:'这是头部文字'

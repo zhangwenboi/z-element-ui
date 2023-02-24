@@ -15,7 +15,7 @@
     <h3>远程过滤</h3>
     <z-select :loading="loading" v-model="select3" :data="option" filterable :remote-method="remoteMethod"
       remote></z-select>
-    <h3>懒加载</h3>
+    <h3>data数据为Promise类型</h3>
     <z-select v-model="select4" :data="lazeOption">
       <template #option="scope">
         <span class="text-red">想不到吧,我还能用插槽</span> {{ scope.option.label }}
