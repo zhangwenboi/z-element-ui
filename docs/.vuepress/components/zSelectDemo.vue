@@ -11,7 +11,13 @@
       </template>
     </z-select>
     <h3>过滤</h3>
-    <z-select :loading="loading" v-model="select3" :data="option" filterable></z-select>
+    <z-select :loading="loading" v-model="select3" :data="option" filterable>
+      <template #empty>
+        什么都找不到,但是我可以自定义空数据时的插槽
+        <br>
+        <img src="../public/logo.png" style="width: 30px; height: 30px;" alt="">
+      </template>
+    </z-select>
     <h3>远程过滤</h3>
     <z-select :loading="loading" v-model="select3" :data="option" filterable :remote-method="remoteMethod"
       remote></z-select>

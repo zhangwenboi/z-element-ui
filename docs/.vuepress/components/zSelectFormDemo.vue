@@ -94,6 +94,9 @@ export default {
           prop: 'age4',
           label: '过滤',
           render: 'z-select',
+          slots: {
+            empty: '没有数据啊'
+          },
           option: {
             data: [
               {

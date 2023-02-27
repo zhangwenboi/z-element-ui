@@ -118,12 +118,31 @@ export const tableExtension = [
   ...table
 ];
 // console.log(table.filter((item) => pagination.includes(item)));
-
+export const row = ['gutter', 'type', 'justify', 'align', 'tag'];
+export const col = ['span', 'offset', 'pull', 'push', 'xs', 'sm', 'md', 'lg', 'xl', 'tag'];
+export const form = [
+  'model',
+  'rules',
+  'inline',
+  'label-position',
+  'label-width',
+  'label-suffix',
+  'hide-required-asterisk',
+  'show-message',
+  'inline-message',
+  'status-icon',
+  'validate-on-rule-change',
+  'size',
+  'disabled'
+];
+export const formItem = ['prop', 'label', 'label-width', 'required', 'rules', 'error', 'show-message', 'inline-message', 'size'];
 export default {
   table,
   tableEvents,
   tableColumn,
   tableMethods,
   tableExtension,
-  pagination
+  pagination,
+  col,
+  row
 };

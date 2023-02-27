@@ -1,0 +1,89 @@
+<template>
+  <el-form :model="form" :rules="rules" ref="form" v-bind="formAttrs">
+    <el-row v-bind="rowAttrs">
+      <el-col v-for="(item, index) in items" :key="index" v-bind="colAttrs(item)">
+        <z-form-item :prop="item.prop" :label="item.label" :render="item.render" :option="item.option"
+          :defaultValue="item.defaultValue" :form="form" :isTag="item.isTag" :on="item.on" :slots="item.slots" />
+      </el-col>
+    </el-row>
+  </el-form>
+</template>
+<script>
+import { getIncludeAttrs, findRef } from '../../utils/utils';
+import { row, col, form as formAttr, formItem } from '../../utils/attrs'
+import {
+  addResizeListener,
+  removeResizeListener,
+} from "element-ui/src/utils/resize-event";
+export default {
+  name: 'zGridFormDemo',
+  data() {
+    return {
+      resizeLayoutProps: null,
+    }
+  },
+  inject: {
+    elForm: {
+      default: null
+    }
+  },
+  props: {
+    form: {
+      type: Object,
+      default: () => ({})
+    },
+    rules: {
+      type: Object,
+      default: () => ({})
+    },
+    items: {
+      type: Array,
+      default: () => []
+    },
+    responsiveMethod: {
+      type: Function,
+      default: (width) => {
+        let span = 24;
+        if (width >= 500 && width < 900) span = 12;
+        if (width >= 900 && width < 1200) span = 8;
+        if (width >= 1200 && width < 1600) span = 6;
+        if (width >= 1600) span = 4;
+        return { span };
+      }
+    },
+  },
+  computed: {
+    formAttrs() {
+      return getIncludeAttrs(this.$attrs, formAttr);
+    },
+    formItemAttrs() {
+      return getIncludeAttrs(this.$attrs, formItem);
+    },
+    rowAttrs() {
+      return getIncludeAttrs(this.$attrs, row);
+    },
+    colAttrs() {
+      return (e) => {
+        return getIncludeAttrs({ span: this.resizeLayoutProps, ...e }, col);
+      }
+    }
+  },
+  mounted() {
+    if (this.responsive) {
+      addResizeListener(this.elForm.$el, this.resize);
+    }
+  },
+  beforeDestroy() {
+    removeResizeListener(this.elForm.$el, this.resize);
+  },
+  methods: {
+    resize() {
+      let width = findRef(this, "elRow").$el.clientWidth;
+      if (!this.responsive || width == 0) return;
+      this.resizeLayoutProps = this.responsiveMethod(width);
+      this.$emit("resize", width);
+    },
+  }
+}
+</script>
+<style scoped></style>
