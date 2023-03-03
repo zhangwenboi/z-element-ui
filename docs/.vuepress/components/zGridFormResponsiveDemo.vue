@@ -1,27 +1,20 @@
 <!-- @format -->
 
 <template>
-  <el-form :model="form" :rules="rules" ref="form" v-bind="$attrs" :label-width="'180px'" label-suffix=":->">
-    <zFormItem v-for="(item, index) in formList" :key="item.label" v-bind="item" :form="form">
-      <template v-if="item.prop === 'name'" #label>
-        <span>label插槽</span>
-      </template>
-    </zFormItem>
-    <el-form-item>
-      <el-button type="primary" @click="submit">提交</el-button>
-    </el-form-item>
-  </el-form>
+  <div>
+    <el-button v-for="item in [2000, 1000, 500]" type="primary" plain :key="item" @click="() => (width = item + 'px')"> 宽度{{ item }}px </el-button>
+    <div :style="{ overflow: 'auto', margin: '12px' }">
+      <z-grid-form :style="{ width }" :form="form" :rules="rules" :items="formList" label-width="140px" responsive></z-grid-form>
+    </div>
+  </div>
 </template>
 <script>
-import zCustomtDemo from './zCustomtDemo.vue';
 export default {
-  name: 'zFormItemDemo',
-  components: {
-    zCustomtDemo
-  },
+  name: 'zGridFormResponsiveDemo',
   data() {
     return {
       form: { age1: '20' },
+      width: '100%',
       rules: {
         name: [
           { required: true, message: '请输入姓名', trigger: 'blur' },
@@ -32,11 +25,10 @@ export default {
         {
           prop: 'name',
           render: 'el-input',
+          'label-width': '0',
+          class: 'border',
           option: {
-            class: 'border',
-            style: {
-              width: '200px'
-            }
+            style: { width: '100%' }
           },
           slots: {
             suffix: () => <i>尾部</i>,
@@ -56,40 +48,30 @@ export default {
           prop: 'check_in',
           render: 'el-time-select',
           label: '使用el-time-select',
+          class: 'border',
           option: {
             'picker-options': {
               start: '08:30',
               step: '00:15',
               end: '10:30'
             },
+            style: { width: '100%' },
             placeholder: '选择打卡时间1'
-          }
-        },
-        {
-          prop: 'check_num',
-          render: 'el-input-number',
-          label: '使用el-input-number',
-          option: {
-            min: 1,
-            max: 10,
-            step: 1,
-            'step-strictly': true,
-            precision: 0,
-            'controls-position': 'right',
-            placeholder: '请输入打卡次数'
           }
         },
         {
           prop: 'switch',
           label: '开关',
           isTag: false,
-          render: '将isTag设置为false,则不会被包裹在el-form-item中，将会被直接渲染',
+          class: 'border',
+          render: '将isTag设置为false将会被直接渲染',
           defaultValue: false
         },
         {
           prop: 'chekbox',
           label: '使用z-checkbox',
           render: 'z-checkbox',
+          class: 'border',
           option: {
             multiple: true,
             data: [
@@ -103,12 +85,14 @@ export default {
         {
           prop: 'custom-select',
           label: '引入自定义组件',
+          class: 'border',
           render: 'zCustomtDemo'
         },
         {
           prop: 'age',
           label: '年龄',
           render: 'z-select',
+          class: 'border',
           option: {
             data: [19, 20, 21],
             placeholder: '请输入年龄'
@@ -119,6 +103,7 @@ export default {
           prop: 'age1',
           label: 'string数据',
           render: 'z-select',
+          class: 'border',
           option: {
             data: '1, 2, 3',
             placeholder: '请输入年龄'
@@ -126,24 +111,10 @@ export default {
           defaultValue: '1'
         },
         {
-          prop: 'type',
-          label: '类型',
-          render: 'z-select',
-          option: {
-            props: { label: 'a', value: 'b' },
-            data: [
-              { a: 'MAN', b: '18', disabled: true },
-              { a: 'MISS', b: '19' },
-              { a: 'emmm', b: '20' }
-            ],
-            placeholder: '请输入年龄'
-          },
-          defaultValue: '20'
-        },
-        {
-          prop: 'age1',
+          prop: 'age12',
           label: '年龄1',
           render: 'z-radio',
+          class: 'border',
           option: {
             data: () => {
               return new Promise((resolve) => {
@@ -162,20 +133,7 @@ export default {
         }
       ]
     };
-  },
-  methods: {
-    submit() {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.$message.success('提交成功');
-          console.log('🚀 ~ this.form', this.form);
-        } else {
-          this.$message.error('提交失败');
-          return false;
-        }
-      });
-      console.log(this.form, this.$attrs);
-    }
   }
 };
 </script>
+<style scoped></style>

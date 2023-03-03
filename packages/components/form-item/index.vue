@@ -55,7 +55,6 @@ export default {
     option: {
       type: Object,
       default: () => ({
-
       })
     },
     defaultValue: {},
@@ -123,7 +122,6 @@ export default {
       }
     }
   },
-
   methods: {
     setFieldDefaultValue() {
       if (this.prop && this.prop.indexOf('_uid_') === -1 && !this.field.o.hasOwnProperty(this.field.k)) {

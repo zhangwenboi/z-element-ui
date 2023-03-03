@@ -133,9 +133,11 @@ export const form = [
   'status-icon',
   'validate-on-rule-change',
   'size',
-  'disabled'
+  'disabled',
+  'style',
+  'class'
 ];
-export const formItem = ['prop', 'label', 'label-width', 'required', 'rules', 'error', 'show-message', 'inline-message', 'size'];
+export const formItem = ['prop', 'label', 'label-width', 'required', 'rules', 'error', 'show-message', 'inline-message', 'size', 'style', 'class'];
 export default {
   table,
   tableEvents,

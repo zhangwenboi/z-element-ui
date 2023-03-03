@@ -1,16 +1,9 @@
 <!-- @format -->
 
 <template>
-  <el-form ref="editform" :model="form" size="mini">
-    <zTable
-      ref="tableEditor"
-      showOperation
-      :tableColumn="form.tableColumn"
-      stripe
-      highlight-current-row
-      :tableData="tableData"
-      v-bind="getProps('tableExtension', $attrs)"
-    >
+  <el-form ref="editForm" :model="form" size="mini">
+    <zTable ref="tableEditor" showOperation :tableColumn="form.tableColumn" stripe highlight-current-row
+      :tableData="tableData" v-bind="getProps('tableExtension', $attrs)">
       <!-- 给表格添加如同z-table一样的配置项 -->
       <template #default="scope">
         <template v-if="scope.row._loading_">
@@ -21,32 +14,17 @@
           <el-button type="text" size="mini" @click="editTable(scope)">{{
             scope.row._view_ ? "保存" : "编辑"
           }}</el-button>
-          <el-button type="text" size="mini" @click="deleteTable(scope)"
-            >删除</el-button
-          >
+          <el-button type="text" size="mini" @click="deleteTable(scope)">删除</el-button>
         </template>
       </template>
-      <template
-        v-for="(header, index) in requiredFields"
-        #[header]="{ column }"
-      >
+      <template v-for="(header, index) in requiredFields" #[header]="{ column }">
         {{ column.label }}<span class="text-red" :key="index"> * </span>
       </template>
       <template v-for="item in form.items" #[item.prop]="scope">
-        <el-form-item
-          v-if="scope.row._view_"
-          :key="`tableData.${scope.$index}.${item.prop}`"
-          :prop="`tableData.${scope.$index}.${item.prop}`"
-          :rules="form.rules[item.prop]"
-        >
-          <zRenderComponents
-            :render="item.render"
-            v-bind="{ scope, ...item.option }"
-            v-on="item.option.on"
-            :is-tag="true"
-            :ref="item.prop || 'component'"
-            v-model="scope.row[item.prop]"
-          ></zRenderComponents>
+        <el-form-item v-if="scope.row._view_" :key="`tableData.${scope.$index}.${item.prop}`"
+          :prop="`tableData.${scope.$index}.${item.prop}`" :rules="form.rules[item.prop]">
+          <zRenderComponents :render="item.render" v-bind="{ scope, ...item.option }" v-on="item.option.on" :is-tag="true"
+            :ref="item.prop || 'component'" v-model="scope.row[item.prop]"></zRenderComponents>
         </el-form-item>
         <template v-else-if="_showSlot(item.prop)">
           <div :key="`tableData.${scope.$index}.${item.prop}`">
@@ -128,7 +106,6 @@ export default {
             : scope.$index;
       this.operationDone(scope, this.delete, () => {
         this.tableData.splice(index, 1);
-        console.log("🚀 ~ this.tableData", this.tableData);
       });
     },
     validateRow(index, callback) {
@@ -136,7 +113,7 @@ export default {
         .filter((e) => e.require)
         .map((e) => `tableData.${index}.${e.prop}`);
       let ok = true;
-      this.$refs["editform"].validateField(props, (errMsg) => {
+      this.$refs["editForm"].validateField(props, (errMsg) => {
         if (errMsg) {
           ok = false;
         }
@@ -169,6 +146,7 @@ export default {
   display: inline-block;
   margin-left: 0px !important;
 }
+
 .el-form-item--mini.el-form-item,
 .el-form-item--small.el-form-item {
   margin-bottom: 0 !important;
@@ -184,6 +162,7 @@ export default {
 .el-date-editor--timerange.el-input__inner {
   max-width: 100%;
 }
+
 .text-red {
   color: red;
 }
