@@ -1,7 +1,9 @@
-import attrsProps from "./attrs";
+/** @format */
+
+import attrsProps from './attrs';
 // 驼峰转短横线
 export function kebabcase(v) {
-  return v.replace(/([^-])([A-Z])/g, "$1-$2").toLowerCase();
+  return v.replace(/([^-])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
 // 短横线转驼峰
@@ -49,25 +51,41 @@ export function getCustomProps(props, attrs) {
   const propsKyes = Object.keys(props);
   const defaultProps = {};
   propsKyes.forEach((k) => {
-    defaultProps[k] =
-      typeof props[k].default == "function"
-        ? props[k].default()
-        : props[k].default;
+    defaultProps[k] = typeof props[k].default == 'function' ? props[k].default() : props[k].default;
   });
-  return attrs
-    ? Object.assign(defaultProps, getIncludeAttrs(propsKyes, attrs))
-    : defaultProps;
+  return attrs ? Object.assign(defaultProps, getIncludeAttrs(propsKyes, attrs)) : defaultProps;
 }
 
-// 生成一个 id
-export function guid() {
-  return "xxxxxxxx".replace(/[x]/g, (c) => {
-    let r = (Math.random() * 16) | 0;
-    let v = c == "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
+// 生成一个 uuid
+export function uuid(len, radix) {
+  var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+  var uuid = [],
+    i;
+  radix = radix || chars.length;
 
+  if (len) {
+    // Compact form
+    for (i = 0; i < len; i++) uuid[i] = chars[0 | (Math.random() * radix)];
+  } else {
+    // rfc4122, version 4 form
+    var r;
+
+    // rfc4122 requires these characters
+    uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+    uuid[14] = '4';
+
+    // Fill in random data.  At i==19 set the high bits of clock sequence as
+    // per rfc4122, sec. 4.1.5
+    for (i = 0; i < 36; i++) {
+      if (!uuid[i]) {
+        r = 0 | (Math.random() * 16);
+        uuid[i] = chars[i == 19 ? (r & 0x3) | 0x8 : r];
+      }
+    }
+  }
+
+  return uuid.join('');
+}
 // 继承属性 关联响应式
 export const extend = function (obj, target = {}, vueset, cover = false) {
   for (const key in target) {
@@ -94,7 +112,7 @@ export const findRef = function (context, refName) {
 export const getArrItems = function (arr) {
   if (Array.isArray(arr)) {
     return arr.map((item) => {
-      item.prop = item.prop || "_uid_" + guid();
+      item.prop = item.prop || '_uid_' + uuid();
       return item;
     });
   } else {
@@ -103,4 +121,15 @@ export const getArrItems = function (arr) {
       return arr[key];
     });
   }
+};
+// 深度克隆Object
+export const deepClone = function (obj) {
+  if (typeof obj !== 'object') {
+    return obj;
+  }
+  let newObj = obj instanceof Array ? [] : {};
+  for (let key in obj) {
+    newObj[key] = typeof obj[key] === 'object' ? deepClone(obj[key]) : obj[key];
+  }
+  return newObj;
 };

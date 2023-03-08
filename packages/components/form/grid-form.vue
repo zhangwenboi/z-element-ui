@@ -1,28 +1,30 @@
 <!-- @format -->
 
 <template>
-  <el-form :model="form" :rules="rules" ref="elForm" v-bind="formAttrs">
-    <el-row v-bind="rowAttrs" ref="elRow">
-      <el-col v-for="(item, index) in items" :key="item.prop" v-bind="colAttrs(item)">
-        <z-form-item
-          :prop="item.prop"
-          :label="item.label"
-          :render="item.render"
-          :option="item.option"
-          :defaultValue="item.defaultValue"
-          :form="form"
-          :isTag="item.isTag"
-          :on="item.on"
-          :slots="item.slots"
-          v-bind="formItemAttrs(item)"
-        />
-      </el-col>
-    </el-row>
+  <el-form :model="form" :rules="rules" ref="elForm" v-bind="formAttrs()">
+    <template v-if="isDynamic">
+      <el-row v-bind="rowAttrs()" ref="elRow" v-for="(row, rowIndex) in dynamicData" :key="row._uuid_">
+        <slot name="prepend"></slot>
+        <el-col v-for="(item, index) in items" :key="item.prop + row._uuid_" v-bind="colAttrs(item)">
+          <z-form-item v-bind="getFormItemAttrs(item, index, row, rowIndex)" />
+        </el-col>
+        <slot name="footer"></slot>
+      </el-row>
+    </template>
+    <template v-else>
+      <el-row v-bind="rowAttrs()" ref="elRow">
+        <slot name="prepend"></slot>
+        <el-col v-for="(item, index) in items" :key="item.prop" v-bind="colAttrs(item)">
+          <z-form-item v-bind="item" />
+        </el-col>
+        <slot name="footer"></slot>
+      </el-row>
+    </template>
   </el-form>
 </template>
 <script>
-import { getIncludeAttrs, findRef } from '../../utils/utils';
-import { row, col, form as formAttr, formItem } from '../../utils/attrs';
+import { row, col } from '../../utils/attrs';
+import formMixin from './formMixin';
 import { addResizeListener, removeResizeListener } from 'element-ui/src/utils/resize-event';
 export default {
   name: 'zGridFormDemo',
@@ -31,19 +33,8 @@ export default {
       resizeLayoutProps: null
     };
   },
+  mixins: [formMixin],
   props: {
-    form: {
-      type: Object,
-      default: () => ({})
-    },
-    rules: {
-      type: Object,
-      default: () => ({})
-    },
-    items: {
-      type: Array,
-      default: () => []
-    },
     gutter: {
       type: Number,
       default: 20
@@ -77,24 +68,6 @@ export default {
       }
     }
   },
-  computed: {
-    formAttrs() {
-      return getIncludeAttrs(formAttr, { ...this.$props, ...this.$attrs });
-    },
-    formItemAttrs() {
-      return (e) => {
-        return getIncludeAttrs(formItem, e);
-      };
-    },
-    rowAttrs() {
-      return getIncludeAttrs(row, this.$props);
-    },
-    colAttrs() {
-      return (e) => {
-        return getIncludeAttrs(col, { ...this.resizeLayoutProps, ...e });
-      };
-    }
-  },
   mounted() {
     if (this.responsive) {
       addResizeListener(this.$el, this.resize);
@@ -105,10 +78,16 @@ export default {
   },
   methods: {
     resize() {
-      let width = findRef(this, 'elRow').$el.clientWidth;
+      let width = this.findRef(this, 'elRow').$el.clientWidth;
       if (!this.responsive || width == 0) return;
       this.resizeLayoutProps = this.responsiveMethod(width);
       this.$emit('resize', width);
+    },
+    rowAttrs() {
+      return this.getIncludeAttrs(row, this.$props);
+    },
+    colAttrs(e) {
+      return this.getIncludeAttrs(col, { ...this.resizeLayoutProps, ...e });
     }
   }
 };

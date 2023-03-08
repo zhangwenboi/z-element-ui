@@ -1,13 +1,12 @@
 <!-- @format -->
 
 <template>
-  <el-form-item v-bind="$attrs" :prop="prop" class="z-form-item" ref="elFormItem">
+  <el-form-item v-bind="formItemAttrs" :prop="prop" class="z-form-item" ref="elFormItem" :label="label">
     <slot slot="label" name="label">
       <render-component v-if="label" :render="labelSuffix" />
     </slot>
     <slot>
-      <render-component v-if="render" :render="render" v-bind="option" v-on="on" :is-tag="isTag"
-        :ref="prop || 'component'" v-model="form[prop]" :placeholder="placeholder">
+      <render-component v-if="render" :render="render" v-bind="{ field, ...option }" v-on="on" :is-tag="isTag" :ref="prop || 'component'" v-model="Value" :placeholder="placeholder">
         <template v-for="(slotItem, staticName) in slot.staticSlots" #[staticName]>
           <render-component :key="staticName" :render="slotItem" />
         </template>
@@ -23,6 +22,8 @@
 const inputType = ['input', 'textarea', 'number', 'password', 'transfer'];
 const selectType = ['select', 'cascader', 'time-select', 'time-picker', 'date-picker'];
 import renderComponent from '../render-component.jsx';
+import { formItem } from '../../utils/attrs';
+import { getIncludeAttrs } from '../../utils/utils';
 import { getPropByPath } from 'element-ui/src/utils/util';
 import zTable from '../table/index.vue';
 import zCheckbox from './items/checkbox.vue';
@@ -54,14 +55,9 @@ export default {
     label: [String, Number, Object, Array, Function],
     option: {
       type: Object,
-      default: () => ({
-      })
-    },
-    defaultValue: {},
-    form: {
-      type: Object,
       default: () => ({})
     },
+    defaultValue: {},
     isTag: {
       type: Boolean,
       default: true
@@ -79,6 +75,15 @@ export default {
     field() {
       return getPropByPath(this.elForm.model, this.prop, true) || {};
     },
+    Value: {
+      get() {
+        return this.field.v;
+      },
+      set(val) {
+        console.log(this.render);
+        this.field.o[this.field.k] = val;
+      }
+    },
     placeholder: {
       get() {
         if (this.option.placeholder) return this.option.placeholder;
@@ -90,8 +95,8 @@ export default {
       }
     },
     labelSuffix() {
-      if (this.label.constructor === String) return this.label + (this.elForm?.labelSuffix || '')
-      return this.label
+      if (this.label.constructor === String) return this.label + (this.elForm?.labelSuffix || '');
+      return this.label;
     },
     slot() {
       let slots = this.slots || {};
@@ -110,6 +115,9 @@ export default {
         staticSlots = { default: slots };
       }
       return { scopedSlots, staticSlots };
+    },
+    formItemAttrs() {
+      return getIncludeAttrs(formItem, this.$attrs);
     }
   },
   watch: {
@@ -124,7 +132,7 @@ export default {
   },
   methods: {
     setFieldDefaultValue() {
-      if (this.prop && this.prop.indexOf('_uid_') === -1 && !this.field.o.hasOwnProperty(this.field.k)) {
+      if (this.prop && this.prop.indexOf('_uuid_') === -1 && !this.field.o.hasOwnProperty(this.field.k)) {
         this.$set(this.field.o, this.field.k, this.defaultValue);
       }
     }

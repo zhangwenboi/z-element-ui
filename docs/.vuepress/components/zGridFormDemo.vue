@@ -1,14 +1,19 @@
 <!-- @format -->
 
 <template>
-  <z-grid-form :form="form" :rules="rules" :items="formList" label-width="140px"></z-grid-form>
+  <div>
+    <el-button type="primary" plain @click="getData"> 获取数据 </el-button>
+    <el-button type="primary" plain @click="checkType"> 切换模式 </el-button>
+    <z-grid-form v-model="form" :rules="rules" :items="formList" label-width="140px" ref="zGridForm" :viewModel="viewModel"> </z-grid-form>
+  </div>
 </template>
 <script>
 export default {
   name: 'zGridFormDemo',
   data() {
     return {
-      form: { age1: '20' },
+      form: [{ age1: '20' }],
+      viewModel: false,
       rules: {
         name: [
           { required: true, message: '请输入姓名', trigger: 'blur' },
@@ -20,7 +25,6 @@ export default {
           prop: 'name',
           render: 'el-input',
           'label-width': '0',
-          span: 24,
           option: {
             class: 'border'
           },
@@ -36,7 +40,7 @@ export default {
               console.log('change', e);
             }
           },
-          defaultValue: '1'
+          defaultValue: 1
         },
         {
           prop: 'check_in',
@@ -60,8 +64,7 @@ export default {
           span: 12,
           class: 'border',
           isTag: false,
-          render: '将isTag设置为false将会被直接渲染',
-          defaultValue: false
+          render: '将isTag设置为false将会被直接渲染'
         },
         {
           prop: 'chekbox',
@@ -99,17 +102,6 @@ export default {
           defaultValue: 20
         },
         {
-          prop: 'age1',
-          label: 'string数据',
-          render: 'z-select',
-          class: 'border',
-          option: {
-            data: '1, 2, 3',
-            placeholder: '请输入年龄'
-          },
-          defaultValue: '1'
-        },
-        {
           prop: 'age12',
           label: '年龄1',
           render: 'z-radio',
@@ -132,7 +124,21 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    getData() {
+      console.log(this.$refs.zGridForm, this.form);
+    },
+    checkType() {
+      this.viewModel = !this.viewModel;
+      console.log(this.form);
+    }
   }
 };
 </script>
-<style scoped></style>
+<style scoped>
+.example {
+  margin-bottom: 10px;
+  float: right;
+}
+</style>

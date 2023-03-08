@@ -2,7 +2,7 @@
 
 <template>
   <el-form :model="form" :rules="rules" ref="form" v-bind="$attrs" :label-width="'180px'" label-suffix=":->">
-    <zFormItem v-for="(item, index) in formList" :key="item.label" v-bind="item" :form="form">
+    <zFormItem v-for="(item, index) in formList" :key="item.label" v-bind="item">
       <template v-if="item.prop === 'name'" #label>
         <span>label插槽</span>
       </template>

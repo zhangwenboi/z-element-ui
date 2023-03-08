@@ -11,7 +11,7 @@ import filtersModule from './filters';
 
 // 引入公共函数（数组函数、对象函数、日期函数、cookies函数）、引入验证正则、加密解密方法
 // import { funcSet, Valid, setElement, setEncrypt } from './utils';
-import { errorHandle } from './utils/config';
+// import { errorHandle } from './utils/config';
 // 定义 install 方法，接收 Vue 作为参数。如果使用 use 注册插件，则所有的组件都将被注册1
 const install = (Vue, option = {}) => {
   // 判断是否安装
@@ -24,7 +24,7 @@ const install = (Vue, option = {}) => {
 
   Vue.use(directives, options.directives);
   Vue.use(filters);
-  Vue.config.errorHandler = errorHandle;
+  // Vue.config.errorHandler = errorHandle;
   // Vue.prototype.$kicHttp = axiosHttp(options.axios);
   // Vue.prototype.$Func = funcSet;
   // Vue.prototype.$Valid = Valid;

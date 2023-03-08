@@ -3,7 +3,7 @@
 export default {
   model: {
     prop: 'value',
-    event: 'change'
+    event: 'input'
   },
   computed: {
     funcs() {

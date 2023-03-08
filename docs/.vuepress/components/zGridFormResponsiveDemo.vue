@@ -26,6 +26,8 @@ export default {
           prop: 'name',
           render: 'el-input',
           'label-width': '0',
+          span: 24,
+
           class: 'border',
           option: {
             style: { width: '100%' }
@@ -59,14 +61,7 @@ export default {
             placeholder: '选择打卡时间1'
           }
         },
-        {
-          prop: 'switch',
-          label: '开关',
-          isTag: false,
-          class: 'border',
-          render: '将isTag设置为false将会被直接渲染',
-          defaultValue: false
-        },
+
         {
           prop: 'chekbox',
           label: '使用z-checkbox',
@@ -76,25 +71,19 @@ export default {
             multiple: true,
             data: [
               { label: '18', value: '18', disabled: true },
-              { label: '19', value: '19' },
-              { label: '20', value: '20' }
+              { label: '19', value: '19' }
             ]
           },
           defaultValue: ['20']
         },
-        {
-          prop: 'custom-select',
-          label: '引入自定义组件',
-          class: 'border',
-          render: 'zCustomtDemo'
-        },
+
         {
           prop: 'age',
           label: '年龄',
           render: 'z-select',
           class: 'border',
           option: {
-            data: [19, 20, 21],
+            data: [19, 20],
             placeholder: '请输入年龄'
           },
           defaultValue: 20
@@ -130,6 +119,20 @@ export default {
             placeholder: '请输入年龄'
           },
           defaultValue: '20'
+        },
+        {
+          prop: 'switch',
+          label: '开关',
+          isTag: false,
+          class: 'border',
+          render: '将isTag设置为false将会被直接渲染',
+          defaultValue: false
+        },
+        {
+          prop: 'custom-select',
+          label: '引入自定义组件',
+          class: 'border',
+          render: 'zCustomtDemo'
         }
       ]
     };

@@ -11,6 +11,7 @@ import EditTable from './edit-table/index.vue';
 import Theme from './theme/index.vue';
 import FormItem from './form-item/index.vue';
 import GridForm from './form/grid-form.vue';
+import DescForm from './form/desc-form.vue';
 import { config } from '../utils/config';
 export const comList = {
   Table,
@@ -23,7 +24,8 @@ export const comList = {
   EditTable,
   Theme,
   FormItem,
-  GridForm
+  GridForm,
+  DescForm
 };
 const install = function (Vue) {
   // 判断是否安装

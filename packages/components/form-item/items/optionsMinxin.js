@@ -17,7 +17,7 @@ export default {
     };
   },
   model: {
-    value: 'Value',
+    prop: 'value',
     event: 'input'
   },
   computed: {
