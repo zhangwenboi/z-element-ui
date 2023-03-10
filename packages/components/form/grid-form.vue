@@ -3,21 +3,21 @@
 <template>
   <el-form :model="form" :rules="rules" ref="elForm" v-bind="formAttrs()">
     <template v-if="isDynamic">
-      <el-row v-bind="rowAttrs()" ref="elRow" v-for="(row, rowIndex) in dynamicData" :key="row._uuid_">
-        <slot name="prepend"></slot>
-        <el-col v-for="(item, index) in items" :key="item.prop + row._uuid_" v-bind="colAttrs(item)">
+      <el-row v-bind="rowAttrs()" ref="elRow" v-for="(row, rowIndex) in dynamicData" :key="row.__uuid__">
+        <slot name="prepend" v-bind="{ row, rowIndex }"></slot>
+        <el-col v-for="(item, index) in items" :key="item.prop + row.__uuid__" v-bind="colAttrs(item)">
           <z-form-item v-bind="getFormItemAttrs(item, index, row, rowIndex)" />
         </el-col>
-        <slot name="footer"></slot>
+        <slot name="append" v-bind="{ row, rowIndex }"></slot>
       </el-row>
     </template>
     <template v-else>
       <el-row v-bind="rowAttrs()" ref="elRow">
         <slot name="prepend"></slot>
         <el-col v-for="(item, index) in items" :key="item.prop" v-bind="colAttrs(item)">
-          <z-form-item v-bind="item" />
+          <z-form-item v-bind="getFormItemAttrs(item, index)" />
         </el-col>
-        <slot name="footer"></slot>
+        <slot name="append"></slot>
       </el-row>
     </template>
   </el-form>

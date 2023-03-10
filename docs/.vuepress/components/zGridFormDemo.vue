@@ -4,7 +4,7 @@
   <div>
     <el-button type="primary" plain @click="getData"> 获取数据 </el-button>
     <el-button type="primary" plain @click="checkType"> 切换模式 </el-button>
-    <z-grid-form v-model="form" :rules="rules" :items="formList" label-width="140px" ref="zGridForm" :viewModel="viewModel"> </z-grid-form>
+    <z-grid-form v-model="form" :rules="rules" :items="formList" label-width="140px" ref="zGridForm" :textModel="textModel"> </z-grid-form>
   </div>
 </template>
 <script>
@@ -12,8 +12,8 @@ export default {
   name: 'zGridFormDemo',
   data() {
     return {
-      form: [{ age1: '20' }],
-      viewModel: false,
+      form: { age1: '20' },
+      textModel: false,
       rules: {
         name: [
           { required: true, message: '请输入姓名', trigger: 'blur' },
@@ -130,7 +130,7 @@ export default {
       console.log(this.$refs.zGridForm, this.form);
     },
     checkType() {
-      this.viewModel = !this.viewModel;
+      this.textModel = !this.textModel;
       console.log(this.form);
     }
   }

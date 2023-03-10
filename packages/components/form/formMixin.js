@@ -15,7 +15,7 @@ export default {
       type: Array,
       default: () => []
     },
-    viewModel: {
+    textModel: {
       type: Boolean,
       default: false
     }
@@ -45,8 +45,8 @@ export default {
     },
     dynamicData() {
       const uidData = this.form.dynamicData?.map((item) => {
-        if (!item?._uuid_) {
-          item._uuid_ = uuid(8, 2);
+        if (!item?.__uuid__) {
+          item.__uuid__ = uuid();
         }
         return item;
       });
@@ -63,7 +63,7 @@ export default {
     validate(callback, erroCallback) {
       this.$refs.elForm.validate((is, errInfo) => {
         if (is) {
-          callback && callback(this.value.data);
+          callback && callback(this.value);
         } else {
           erroCallback && erroCallback(errInfo);
         }
@@ -81,16 +81,16 @@ export default {
     findRef(context, refName) {
       return findRef(context, refName);
     },
-    getFormItemAttrs(item, index, row, rowIndex) {
+    getFormItemAttrs(item, index, ...args) {
       const formItem = { ...item };
-      if (this.viewModel || formItem.viewModel) {
-        const value = row[item.prop];
-        formItem.render = () => (formItem.viewFormat ? formItem.viewFormat({ value, formItem, index, row, rowIndex }) : String(value));
+      if (this.textModel || formItem.textModel) {
+        const value = args.length ? args[0][item.prop] : this.form[item.prop];
+        formItem.render = () => (formItem.format && formItem.format.constructor === Function ? formItem.format({ value, index, ...args }) : !!value ? String(value) : '');
         formItem.isTag = false;
         return formItem;
       }
-      const prop = this.getItemProp(formItem.prop, rowIndex);
-      const rules = [].concat(formItem.rules || [], (this.formAttrs.rules || {})[formItem.prop] || []);
+
+      const rules = [].concat(formItem.rules || [], (this.rules || {})[formItem.prop] || []);
       const label = typeof formItem.label == 'string' ? formItem.label : '';
       if (formItem.render.constructor !== Function && formItem.required && rules.length === 0) {
         formItem.required = undefined;
@@ -101,9 +101,10 @@ export default {
             trigger: inputType.includes(formItem.render) ? 'blur' : 'change'
           }
         ];
+      } else {
+        formItem.rules = rules;
       }
-
-      formItem.prop = prop;
+      formItem.prop = args.length ? this.getItemProp(formItem.prop, args[1]) : formItem.prop;
       return formItem;
     },
     getItemProp(prop, rowIndex) {

@@ -2,11 +2,13 @@
 
 <template>
   <el-form-item v-bind="formItemAttrs" :prop="prop" class="z-form-item" ref="elFormItem" :label="label">
-    <slot slot="label" name="label">
-      <render-component v-if="label" :render="labelSuffix" />
-    </slot>
+    <template v-if="!isString">
+      <slot slot="label" name="label">
+        <render-component :render="labelSuffix" />
+      </slot>
+    </template>
     <slot>
-      <render-component v-if="render" :render="render" v-bind="{ field, ...option }" v-on="on" :is-tag="isTag" :ref="prop || 'component'" v-model="Value" :placeholder="placeholder">
+      <render-component v-if="render" :render="render" v-bind="{ field, vmodel: field.o, ...option }" v-on="on" :is-tag="isTag" :ref="prop || 'component'" v-model="Value" :placeholder="placeholder">
         <template v-for="(slotItem, staticName) in slot.staticSlots" #[staticName]>
           <render-component :key="staticName" :render="slotItem" />
         </template>
@@ -80,7 +82,6 @@ export default {
         return this.field.v;
       },
       set(val) {
-        console.log(this.render);
         this.field.o[this.field.k] = val;
       }
     },
@@ -97,6 +98,9 @@ export default {
     labelSuffix() {
       if (this.label.constructor === String) return this.label + (this.elForm?.labelSuffix || '');
       return this.label;
+    },
+    isString() {
+      return this.label.constructor === String;
     },
     slot() {
       let slots = this.slots || {};
@@ -132,7 +136,7 @@ export default {
   },
   methods: {
     setFieldDefaultValue() {
-      if (this.prop && this.prop.indexOf('_uuid_') === -1 && !this.field.o.hasOwnProperty(this.field.k)) {
+      if (this.prop && this.prop.indexOf('__uuid__') === -1 && !this.field.o.hasOwnProperty(this.field.k)) {
         this.$set(this.field.o, this.field.k, this.defaultValue);
       }
     }

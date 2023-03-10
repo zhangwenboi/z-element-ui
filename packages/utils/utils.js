@@ -112,7 +112,7 @@ export const findRef = function (context, refName) {
 export const getArrItems = function (arr) {
   if (Array.isArray(arr)) {
     return arr.map((item) => {
-      item.prop = item.prop || '_uid_' + uuid();
+      item.prop = item.prop || '__uuid__' + uuid();
       return item;
     });
   } else {

@@ -80,13 +80,11 @@ export default {
         {
           prop: 'age',
           label: '年龄',
-          render: 'z-select',
-          class: 'border',
-          option: {
-            data: [19, 20],
-            placeholder: '请输入年龄'
+          render: ({ vmodel }) => {
+            console.log(vmodel);
+            return <el-input v-model={vmodel.age} placeholder="请输入年龄" />;
           },
-          defaultValue: 20
+          class: 'border'
         },
         {
           prop: 'age1',

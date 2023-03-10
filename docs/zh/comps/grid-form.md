@@ -16,6 +16,14 @@
 ## 响应式表单
 
 
+`使用responsive:true开启表单响应式`
+
+<ClientOnly><zGridFormResponsiveDemo/></ClientOnly>
+
+::: details 点击查看代码
+<<< @/docs/.vuepress/components/zGridFormResponsiveDemo.vue
+:::
+
 
 
 

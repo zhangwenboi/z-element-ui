@@ -42,8 +42,6 @@ export default {
     };
     const render = context.props.render;
     const value = typeof render === 'function' ? render(context.data.attrs) : render;
-    console.log("🚀 ~ value:", value,isText(value));
-
     if (isText(value)) return h('span', context.data, value);
     if (isComponent(value)) return h(render, context.data, context.children);
     if (isVNode(value)) return wrapvnode(value);
