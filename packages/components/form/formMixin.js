@@ -85,14 +85,14 @@ export default {
       const formItem = { ...item };
       if (this.textModel || formItem.textModel) {
         const value = args.length ? args[0][item.prop] : this.form[item.prop];
-        formItem.render = () => (formItem.format && formItem.format.constructor === Function ? formItem.format({ value, index, ...args }) : !!value ? String(value) : '');
+        formItem.render = () => (formItem.format && (formItem.format instanceof  Function) ? formItem.format({ value, index, ...args }) : !!value ? String(value) : '');
         formItem.isTag = false;
         return formItem;
       }
 
       const rules = [].concat(formItem.rules || [], (this.rules || {})[formItem.prop] || []);
       const label = typeof formItem.label == 'string' ? formItem.label : '';
-      if (formItem.render.constructor !== Function && formItem.required && rules.length === 0) {
+      if ( !(formItem.render instanceof  Function) && formItem.required && rules.length === 0) {
         formItem.required = undefined;
         formItem.rules = [
           {

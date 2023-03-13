@@ -1,19 +1,43 @@
 <!-- @format -->
 
 <template>
-  <el-form-item v-bind="formItemAttrs" :prop="prop" class="z-form-item" ref="elFormItem" :label="label">
+  <el-form-item
+    v-bind="formItemAttrs"
+    :prop="prop"
+    class="z-form-item"
+    ref="elFormItem"
+    :label="label"
+  >
     <template v-if="!isString">
       <slot slot="label" name="label">
         <render-component :render="labelSuffix" />
       </slot>
     </template>
     <slot>
-      <render-component :render="render || 'el-input'" v-bind="{ field, vmodel: field.o, ...option }" v-on="on" :is-tag="isTag" :ref="prop || 'component'" v-model="Value" :placeholder="placeholder">
-        <template v-for="(slotItem, staticName) in slot.staticSlots" #[staticName]>
+      <render-component
+        :render="render"
+        v-bind="{ field, vmodel: field.o, ...option }"
+        v-on="on"
+        :is-tag="isTag"
+        :ref="prop || 'component'"
+        v-model="Value"
+        :placeholder="placeholder"
+      >
+        <template
+          v-for="(slotItem, staticName) in slot.staticSlots"
+          #[staticName]
+        >
           <render-component :key="staticName" :render="slotItem" />
         </template>
-        <template v-for="(slotItem, scopedName) in slot.scopedSlots" #[scopedName]="slotProps">
-          <render-component :key="scopedName" :render="slotItem" v-bind="slotProps" />
+        <template
+          v-for="(slotItem, scopedName) in slot.scopedSlots"
+          #[scopedName]="slotProps"
+        >
+          <render-component
+            :key="scopedName"
+            :render="slotItem"
+            v-bind="slotProps"
+          />
         </template>
       </render-component>
     </slot>
@@ -53,8 +77,14 @@ export default {
       type: String,
       required: true
     },
-    render: [String, Function],
-    label: [String, Number, Object, Array, Function],
+    render: {
+      type: [String, Function],
+      default: 'el-input'
+    },
+    label: {
+      type: [String, Number, Object, Array, Function],
+      default: ''
+    },
     option: {
       type: Object,
       default: () => ({})
@@ -88,7 +118,7 @@ export default {
     placeholder: {
       get() {
         if (this.option.placeholder) return this.option.placeholder;
-        if (this.render.constructor === String) {
+        if (this.render?.constructor === String) {
           const label = this.label || '';
           return inputType.some((e) => this.render.includes(e)) ? '请输入' + label : selectType.some((e) => this.render.includes(e)) ? '请选择' + label : '';
         }
@@ -96,20 +126,20 @@ export default {
       }
     },
     labelSuffix() {
-      if (this.label.constructor === String) return this.label + (this.elForm?.labelSuffix || '');
+      if (this.label?.constructor === String) return this.label + (this.elForm?.labelSuffix || '');
       return this.label;
     },
     isString() {
-      return this.label.constructor === String;
+      return this.label?.constructor === String;
     },
     slot() {
       let slots = this.slots || {};
       let scopedSlots = {};
       let staticSlots = {};
-      if (slots.constructor == Object) {
+      if (slots?.constructor == Object) {
         for (const name in slots) {
           const slot = slots[name];
-          if (slot.constructor == Function && slot.length > 0) {
+          if (slot?.constructor == Function && slot.length > 0) {
             scopedSlots[name] = slot;
           } else {
             staticSlots[name] = slot;
