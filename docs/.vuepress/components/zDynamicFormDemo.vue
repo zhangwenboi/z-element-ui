@@ -3,14 +3,14 @@
 <template>
   <div>
     <z-grid-form v-model="form" :rules="rules" :items="formList" label-width="140px" ref="zGridForm">
-      <template #prepend="scope">
-        <div class="m-20">
-          <span style="font-size: large; font-weight: 600">表单{{ scope.rowIndex }}</span>
-          <el-button v-if="!scope.rowIndex" type="success" plain @click="add"> 新增 </el-button>
+      <template #prepend="{ row, rowIndex }">
+        <div class="m-20" v-if="!rowIndex">
+          <span style="font-size: large; font-weight: 600">表单{{ rowIndex }}</span>
+          <el-button type="success" plain @click="add"> 新增 </el-button>
         </div>
       </template>
       <template #append="scope">
-        <el-col :span="12">
+        <el-col :span="12" v-if="!!scope.rowIndex">
           <el-button type="danger" plain @click="deleteRow(scope)"> 删除 </el-button>
         </el-col>
       </template>
@@ -51,8 +51,7 @@ export default {
               step: '00:15',
               end: '10:30'
             },
-            style: { width: '100%' },
-            placeholder: '选择打卡时间1'
+            style: { width: '100%' }
           }
         }
       ]

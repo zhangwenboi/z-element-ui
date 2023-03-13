@@ -22,10 +22,13 @@
 </template>
 <script>
 import formMixin from './formMixin';
-
+import renderComponent from '../render-component';
 export default {
   name: 'zDescFormDemo',
   mixins: [formMixin],
+  comments: {
+    renderComponent
+  },
   computed: {},
   data() {
     return {};

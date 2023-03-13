@@ -8,7 +8,7 @@
       </slot>
     </template>
     <slot>
-      <render-component v-if="render" :render="render" v-bind="{ field, vmodel: field.o, ...option }" v-on="on" :is-tag="isTag" :ref="prop || 'component'" v-model="Value" :placeholder="placeholder">
+      <render-component :render="render || 'el-input'" v-bind="{ field, vmodel: field.o, ...option }" v-on="on" :is-tag="isTag" :ref="prop || 'component'" v-model="Value" :placeholder="placeholder">
         <template v-for="(slotItem, staticName) in slot.staticSlots" #[staticName]>
           <render-component :key="staticName" :render="slotItem" />
         </template>

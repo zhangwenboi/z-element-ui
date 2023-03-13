@@ -138,7 +138,7 @@ export const form = [
   'class'
 ];
 export const formItem = ['prop', 'label', 'label-width', 'required', 'rules', 'error', 'show-message', 'inline-message', 'size', 'style', 'class'];
-export const inputType = ['el-input', 'el-input-number', 'el-autocomplete'];
+export const inputType = ['input', 'autocomplete'];
 export default {
   table,
   tableEvents,

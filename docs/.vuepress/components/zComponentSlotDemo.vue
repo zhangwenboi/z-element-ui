@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <template>
-  <z-grid-form v-model="form" :rules="rules" :items="formList" label-width="140px" ref="zSlotsForm">
+  <z-grid-form v-model="form" :rules="rules" :items="formList" label-width="140px" ref="zComponentSlotDemo">
     <template #prepend>
       <div class="m-20">
         <span style="font-size: large; font-weight: 600">标题 </span>
@@ -18,15 +18,15 @@
 </template>
 <script>
 export default {
-  name: 'zSlotsFormDemo',
+  name: 'zComponentSlotDemo',
   data() {
     return {
-      form: { age: '23' },
+      form: { slots_example: [1, 2, 3], age: '23' },
       transformData: [],
       rules: {
         age: [
-          { required: true, message: '请输入姓名', trigger: 'blur' },
-          { min: 2, max: 5, message: '长度在 2 到 5 个字符', trigger: 'blur' }
+          { required: true, message: '请输入姓名', trigger: 'change' },
+          { min: 2, max: 5, message: '长度在 2 到 5 个字符', trigger: 'change' }
         ]
       },
       formList: [
@@ -34,23 +34,39 @@ export default {
           prop: 'age',
           label: '年龄',
           render: ({ vmodel }) => {
-            console.log('🚀 ~ vmodel:', vmodel['age']);
-            return <el-input v-model={vmodel['age']} placeholder="请输入年龄" />;
+            return <el-input v-model={vmodel.age} placeholder="请输入年龄" />;
           }
         },
-
         {
-          prop: 'gender',
-          label: '性别',
-          render: ({ vmodel }) => {
-            return (
-              <el-radio-group v-model={vmodel['gender']}>
-                <el-radio label={'男'}> 男 </el-radio>
-                <el-radio label={'女'}> 女 </el-radio>
-              </el-radio-group>
-            );
+          prop: 'slots_example',
+          label: '插槽示例',
+          render: 'el-transfer',
+          option: {},
+          slots: {
+            'left-footer': () => {
+              return (
+                <el-button type="primary" size="small" style="margin: 5px">
+                  自定义左侧底部插槽
+                </el-button>
+              );
+            },
+            'right-footer': (
+              <el-button type="primary" size="small" style="margin: 5px">
+                自定义右侧底部插槽123
+              </el-button>
+            )
           },
-          defaultValue: '男'
+          on: {
+            change: (e) => {
+              console.log('change', e);
+            },
+            'left-check-change': (e) => {
+              console.log('left-check-change', e);
+            },
+            'right-check-change': (e) => {
+              console.log('right-check-change', e);
+            }
+          }
         }
       ]
     };
@@ -60,9 +76,10 @@ export default {
   },
   methods: {
     submit() {
-      console.log(this.$refs.zSlotsForm);
       this.$refs.zSlotsForm.validate(
         (valid) => {
+          console.log('🚀 ~ valid:', this.form);
+
           this.$message.success('验证成功', valid);
         },
         (err) => {

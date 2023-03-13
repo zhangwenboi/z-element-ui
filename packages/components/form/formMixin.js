@@ -98,7 +98,7 @@ export default {
           {
             required: true,
             message: label + '必填',
-            trigger: inputType.includes(formItem.render) ? 'blur' : 'change'
+            trigger: inputType.some((e) => formItem.render.includes(e)) ? 'blur' : 'change'
           }
         ];
       } else {
