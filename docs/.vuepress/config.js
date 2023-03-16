@@ -1,5 +1,13 @@
 /** @format */
+
 module.exports = {
+  configureWebpack: {
+    resolve: {
+      alias: {
+        '@public': '../public'
+      }
+    }
+  },
   chainWebpack(config) {
     config.resolve.alias.set('core-js/library/fn', 'core-js/features');
   },
@@ -82,7 +90,15 @@ module.exports = {
           {
             title: '组件', // 必要的
             collapsable: false, // 可选的, 默认值是 true,
-            children: ['/zh/comps/table', '/zh/comps/edit-table', '/zh/comps/form-item', '/zh/comps/select', '/zh/comps/grid-form']
+            children: [
+              '/zh/comps/introduce',
+              '/zh/comps/table',
+              '/zh/comps/edit-table',
+              '/zh/comps/inline-form',
+              '/zh/comps/grid-form',
+              '/zh/comps/desc-form',
+              { title: '单组件', collapsable: false, children: ['/zh/comps/form-item', '/zh/comps/select'] }
+            ]
           },
           {
             title: '附加功能',

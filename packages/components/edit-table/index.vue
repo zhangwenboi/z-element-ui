@@ -2,7 +2,7 @@
 
 <template>
   <el-form ref="editForm" :model="form" size="mini">
-    <zTable ref="tableEditor" showOperation :tableColumn="form.tableColumn" stripe highlight-current-row :tableData="tableData" v-bind="getProps('tableExtension', $attrs)">
+    <zTable ref="tableEditor" showOperation :tableColumn="tableColumn" stripe highlight-current-row :tableData="tableData" v-bind="getProps('tableExtension', $attrs)">
       <!-- 给表格添加如同z-table一样的配置项 -->
       <template #default="scope">
         <template v-if="scope.row._loading_">
@@ -14,13 +14,13 @@
         </template>
       </template>
       <template v-for="(header, index) in requiredFields" #[header]="{ column }"> {{ column.label }}<span class="text-red" :key="index"> * </span> </template>
-      <template v-for="item in form.items" #[item.prop]="scope">
-        <el-form-item v-if="scope.row._view_" :key="`tableData.${scope.$index}.${item.prop}`" :prop="`tableData.${scope.$index}.${item.prop}`" :rules="form.rules[item.prop]">
+      <template v-for="item in items" #[item.prop]="scope">
+        <el-form-item v-if="scope.row._view_" :key="`tableData.${scope.$index}.${item.prop}`" :prop="`tableData.${scope.$index}.${item.prop}`" :rules="rules?.[item.prop]">
           <zRenderComponents
             :render="item.render"
-            v-bind="{ scope, ...item.option }"
-            v-on="item.option.on"
             :is-tag="true"
+            v-bind="{ scope, ...item.option }"
+            v-on="item.option?.on"
             :ref="item.prop || 'component'"
             v-model="scope.row[item.prop]"
           ></zRenderComponents>
@@ -49,16 +49,30 @@ export default {
     zTable,
     zRenderComponents
   },
-
+  model: {
+    prop: 'value',
+    event: 'change'
+  },
   computed: {
-    requiredFields: (that) => that.form?.items?.filter((e) => e.require).map((e) => e.prop + 'header') || [],
-    tableData: (that) => that.form?.tableData || []
+    requiredFields: (that) => that.items?.filter((e) => e.require).map((e) => e.prop + 'header') || [],
+    tableData: {
+      get() {
+        return this.value;
+      },
+      set(val) {
+        this.$emit('change', val);
+      }
+    },
+    form() {
+      return {
+        tableData: this.tableData
+      };
+    }
   },
   props: {
-    form: {
-      type: Object,
-      required: true,
-      default: () => ({})
+    value: {
+      type: Array,
+      default: () => []
     },
     save: {
       type: Function,
@@ -66,6 +80,18 @@ export default {
     },
     delete: {
       type: Function,
+      default: () => {}
+    },
+    tableColumn: {
+      type: Array,
+      default: () => []
+    },
+    items: {
+      type: Array,
+      default: () => []
+    },
+    rules: {
+      type: Object,
       default: () => {}
     }
   },
@@ -99,7 +125,7 @@ export default {
       });
     },
     validateRow(index, callback) {
-      let props = this.form.items.filter((e) => e.require).map((e) => `tableData.${index}.${e.prop}`);
+      let props = this.items.filter((e) => e.require).map((e) => `tableData.${index}.${e.prop}`);
       let ok = true;
       this.$refs['editForm'].validateField(props, (errMsg) => {
         if (errMsg) {

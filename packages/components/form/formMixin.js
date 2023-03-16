@@ -1,7 +1,15 @@
-/** @format */
+
+
 import { getIncludeAttrs, findRef, uuid } from '../../utils/utils';
 import { form as formAttr, inputType } from '../../utils/attrs';
+import formItem from '../form-item/index.vue';
+import renderComponent from '../render-component';
+
 export default {
+  components: {
+    formItem,
+    renderComponent
+  },
   props: {
     value: {
       type: [Object, Array],
@@ -54,6 +62,14 @@ export default {
     }
   },
   methods: {
+    getVif(item, ...args) {
+      const { row } = args;
+      return typeof item.display == 'function' ? item.display(row || this.form) : item.display || true;
+    },
+    getVshow(item, ...args) {
+      const { row } = args;
+      return typeof item.show == 'function' ? item.show(row || this.form) : item.display || true;
+    },
     formAttrs() {
       return getIncludeAttrs(formAttr, { ...this.$props, ...this.$attrs });
     },
@@ -85,20 +101,19 @@ export default {
       const formItem = { ...item };
       if (this.textModel || formItem.textModel) {
         const value = args.length ? args[0][item.prop] : this.form[item.prop];
-        formItem.render = () => (formItem.format && (formItem.format instanceof  Function) ? formItem.format({ value, index, ...args }) : !!value ? String(value) : '');
+        formItem.render = () => (formItem.format && formItem.format instanceof Function ? formItem.format({ value, index, ...args }) : !!value ? String(value) : '');
         formItem.isTag = false;
         return formItem;
       }
-
       const rules = [].concat(formItem.rules || [], (this.rules || {})[formItem.prop] || []);
       const label = typeof formItem.label == 'string' ? formItem.label : '';
-      if ( !(formItem.render instanceof  Function) && formItem.required && rules.length === 0) {
-        formItem.required = undefined;
+      if (formItem.required && rules.length === 0) {
+        delete formItem.required;
         formItem.rules = [
           {
             required: true,
             message: label + '必填',
-            trigger: inputType.some((e) => formItem.render.includes(e)) ? 'blur' : 'change'
+            trigger: formItem.render instanceof Function ? 'change' : inputType.some((e) => formItem.render.includes(e)) ? 'blur' : 'change'
           }
         ];
       } else {

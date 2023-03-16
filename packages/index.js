@@ -1,4 +1,4 @@
-/** @format */
+
 import deepmerge from 'deepmerge';
 import basicOptions from './utils/options.js';
 // 引入公共组件、指令、过滤器

@@ -1,4 +1,4 @@
-/** @format */
+
 
 table {
   margin: 0 !important;
@@ -26,6 +26,44 @@ table {
 .m-20{
   margin: 20px;
 }
+.m-10{
+  margin: 10px;
+}
+.m-5{
+  margin: 5px;
+}
+.m-2{
+  margin: 2px;
+}
+.m-1{
+  margin: 1px;
+}
+.m-0{
+  margin: 0px;
+}
+.p-20{
+  padding: 20px;
+}
+.p-10{
+  padding: 10px;
+}
+
+.p-5{
+  padding: 5px;
+}
+.p-2{
+  padding: 2px;
+}
+.p-1{
+  padding: 1px;
+}
+.p-0{
+  padding: 0px;
+}
+
 .text-right{
   text-align: right;
+}
+.text-left{
+  text-align: left;
 }

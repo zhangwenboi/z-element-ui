@@ -8,8 +8,7 @@
 
 ### 普通表格
 
-`z-table` 引入了 `el-pagination`，对于前端进行分页处理时有很大帮助，只需要传入数据即可，无需关注如何分页，如果不需要分页，
-传入 `:showPagination="false"`
+`z-table` 引入了 `el-pagination`，无需关注如何分页,`z-table`会自动帮你完成分页， 是否分页由 `showPagination` 字段控制,默认开启
 
 `el-pagination` 的配置项可以像传递 `tableData` 一样直接传入.
 
@@ -21,7 +20,7 @@
 
 ### 服务器分页表格
 
-`z-table` 支持服务器分页情况下的表格,只需要传入 `:frontPagination='false'` . 并且使用 `pageIndexChange` 回调函数，下面是一个例子
+`z-table` 支持服务器分页,传入 `:frontPagination='false'` . 并且使用 `pageIndexChange` 回调函数，下面是一个例子
 
 <ClientOnly><zTablePageDemo/></ClientOnly>
 
@@ -31,9 +30,9 @@
 
 
 
-### 插槽 slot 操作列...
+### 插槽 slot 操作列
 
-自定义的`z-table`为了提供和`el-table`一样的可高度自定义化,提供了`slot`选项,
+操作列插槽为 `z-table` 默认插槽,接收三个参数 ` #default = { row , $index , column } `.
 
 <ClientOnly><zTableSlotDemo/></ClientOnly>
 
@@ -48,6 +47,7 @@
 | :--------------------- | :--------------------------------: | :----------------------------------------------------------: | ------------------------------------------------------------ |
 | **tableData**          | Array<{prop:string, label:string}> |                             [ ]                              | 表格数据                                                     |
 | **tableColumn**        |               Array                |                             [ ]                              | 表格项                                                       |
+| showPagination         |              Boolean               |                             true                             | 是否开启分页                                                 |
 | paginationOption       |               Object               | {\"layout\": \"total,sizes,prev,pager,next\", \"pageSize\":10, "total\":0, \"currentPage\":1} | 分页配置集合，支持所有的 pagination 配置项[el-pagination组件 \| Element](https://element.eleme.cn/#/zh-CN/component/pagination) |
 | layout                 |               String               |                 total,sizes,prev,pager,next                  | 组件布局，子组件名用逗号分隔                                 |
 | pageSize               |               Number               |                              10                              | 每页显示条目个数                                             |

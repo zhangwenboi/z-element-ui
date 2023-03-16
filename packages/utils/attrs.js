@@ -139,6 +139,8 @@ export const form = [
 ];
 export const formItem = ['prop', 'label', 'label-width', 'required', 'rules', 'error', 'show-message', 'inline-message', 'size', 'style', 'class'];
 export const inputType = ['input', 'autocomplete'];
+export const description = ['border', 'column', 'direction', 'size', 'title', 'extra', 'colon', 'labelClassName', 'contentClassName', 'labelStyle', 'contentStyle'];
+export const descriptionItem = ['label', 'span', 'labelClassName', 'contentClassName', 'labelStyle', 'contentStyle'];
 export default {
   table,
   tableEvents,
@@ -148,5 +150,7 @@ export default {
   pagination,
   col,
   row,
-  inputType
+  inputType,
+  description,
+  descriptionItem
 };

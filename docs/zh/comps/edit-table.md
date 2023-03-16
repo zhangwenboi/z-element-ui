@@ -2,24 +2,21 @@
 
 ## 描述
 
-`z-edit-table` 使用`z-table` `el-form`封装而成，它默认支持了`el-form`下的常用组件，如:`el-input ` `el-select` `el-datePicker`
-
-`el-timePicker` `el-switch` `el-radio`  `el-checkbox` . 如果有更多需要可以在配置项**items**中将`render`更改为渲染函数的方式，下方实例中有相关展示.
+`z-edit-table` 支持`el-form`下的常用组件
 
 <ClientOnly><zEditTableDemo/></ClientOnly>
 
 ::: details 点击查看代码
 <<< @/docs/.vuepress/components/zEditTableDemo.vue
 :::
-从上方实例我们可以发现，如果**items**中的组件需要给予属性值，需要将其放入 `option` 中，其中 `option` 中的`data`为该项所需的数据,例如`el-select`等选项.
 
 下方是`z-edit-table`的数据配置介绍,以及数据格式规范:
 
 ### paginationOption
 
-`z-table`中引入了 `el-pagination`分页管理器,如果在编辑表格的同时需要进行相关配置,直接将`el-pagination`的配置加到`z-edit-table`上即可,与直接使用z-table的使用相同.
+ 与 `z-table` 使用方式一致 [详情](/zh/comps/table.html#table-attributes)
 
-### form
+### form字段的内容
 
 
 

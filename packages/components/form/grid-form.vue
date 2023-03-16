@@ -6,7 +6,7 @@
       <el-row v-bind="rowAttrs()" ref="elRow" v-for="(row, rowIndex) in dynamicData" :key="row.__uuid__">
         <slot name="prepend" v-bind="{ row, rowIndex }"></slot>
         <el-col v-for="(item, index) in items" :key="item.prop + row.__uuid__" v-bind="colAttrs(item)">
-          <z-form-item v-bind="getFormItemAttrs(item, index, row, rowIndex)" />
+          <form-item v-bind="getFormItemAttrs(item, index, row, rowIndex)" />
         </el-col>
         <slot name="append" v-bind="{ row, rowIndex }"></slot>
       </el-row>
@@ -15,7 +15,7 @@
       <el-row v-bind="rowAttrs()" ref="elRow">
         <slot name="prepend"></slot>
         <el-col v-for="(item, index) in items" :key="item.prop" v-bind="colAttrs(item)">
-          <z-form-item v-bind="getFormItemAttrs(item, index)" />
+          <form-item v-bind="getFormItemAttrs(item, index)" />
         </el-col>
         <slot name="append"></slot>
       </el-row>

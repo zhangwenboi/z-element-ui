@@ -1,4 +1,4 @@
-/** @format */
+
 
 import Table from './table/index.vue';
 import Checkbox from './form-item/items/checkbox.vue';
@@ -12,6 +12,7 @@ import Theme from './theme/index.vue';
 import FormItem from './form-item/index.vue';
 import GridForm from './form/grid-form.vue';
 import DescForm from './form/desc-form.vue';
+import InlineForm from './form/inline-form.vue';
 import { config } from '../utils/config';
 export const comList = {
   Table,
@@ -25,7 +26,8 @@ export const comList = {
   Theme,
   FormItem,
   GridForm,
-  DescForm
+  DescForm,
+  InlineForm
 };
 const install = function (Vue) {
   // 判断是否安装

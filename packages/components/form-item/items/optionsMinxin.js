@@ -1,4 +1,4 @@
-/** @format */
+
 
 export default {
   props: {

@@ -1,66 +1,37 @@
+<!-- @format -->
+
 <!-- eslint-disable vue/no-mutating-props -->
 <!-- @format -->
 
 <template>
   <div>
-    <el-table
-      :data="currentData"
-      style="width: 100%"
-      v-bind="getProps('table', $attrs)"
-      v-on="$listeners"
-    >
+    <el-table :data="currentData" style="width: 100%" v-bind="getProps('table', $attrs)" v-on="$listeners">
       <!-- <template #empty class="flex align-middle">
         <img class="mt-5 w-56" src="./nodata.png" alt="暂无内容" />
         <span class="text-xl">暂无数据</span>
       </template> -->
       <!-- 序号 -->
-      <el-table-column v-if="showIndex" type="index" width="45">
-      </el-table-column>
+      <el-table-column v-if="showIndex" type="index" width="45"> </el-table-column>
       <!-- 选择 -->
-      <el-table-column
-        v-if="showCheckbox"
-        type="selection"
-        width="45"
-        :fixed="showFixed"
-      />
+      <el-table-column v-if="showCheckbox" type="selection" width="45" :fixed="showFixed" />
       <!-- 展开 -->
-      <el-table-column
-        v-if="showExpand"
-        type="expand"
-        width="45"
-        :fixed="showFixed"
-      >
+      <el-table-column v-if="showExpand" type="expand" width="45" :fixed="showFixed">
         <template #expand="scope">
           <slot v-bind="scope" name="expand" />
         </template>
       </el-table-column>
 
       <!-- 通用 -->
-      <el-table-column
-        v-for="(item, index) in tableColumn"
-        :key="item + index"
-        v-bind="getProps('tableColumn', item)"
-      >
-        <template
-          v-if="_showSlot(item.prop + 'header')"
-          #header="{ column, $index }"
-        >
+      <el-table-column v-for="(item, index) in tableColumn" :key="item + index" v-bind="getProps('tableColumn', item)">
+        <template v-if="_showSlot(item.prop + 'header')" #header="{ column, $index }">
           <slot v-bind="{ column, $index }" :name="item.prop + 'header'"></slot>
         </template>
-        <template
-          v-if="_showSlot(item.prop)"
-          #default="{ row, column, $index }"
-        >
+        <template v-if="_showSlot(item.prop)" #default="{ row, column, $index }">
           <slot v-bind="{ row, column, $index }" :name="item.prop"></slot>
         </template>
       </el-table-column>
       <!-- 操作 -->
-      <el-table-column
-        v-if="showOperation"
-        :fixed="showFixed ? 'right' : false"
-        :label="operationLable"
-        :width="operationWidth"
-      >
+      <el-table-column v-if="showOperation" :fixed="showFixed ? 'right' : false" :label="operationLable" :width="operationWidth">
         <template #default="scope">
           <slot v-bind="scope" />
         </template>
@@ -81,9 +52,9 @@
 </template>
 
 <script>
-import { getProps } from "../../utils/utils";
+import { getProps } from '../../utils/utils';
 export default {
-  name: "zTable",
+  name: 'zTable',
   components: {},
   props: {
     showCheckbox: { type: Boolean, default: false }, //是否开启多选框
@@ -93,46 +64,46 @@ export default {
     showIndex: { type: Boolean, default: false }, //是否包含序号
     operationLable: {
       type: String,
-      default: "操作",
+      default: '操作'
     },
     operationWidth: {
       type: String,
-      default: "120px",
+      default: '120px'
     },
     total: {
       type: Number,
-      default: 0,
+      default: 0
     },
     currentPage: {
       type: Number,
-      default: 1,
+      default: 1
     },
     pageSize: {
       type: Number,
-      default: 10,
+      default: 10
     },
     tableData: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     tableColumn: {
       type: Array,
       default: () => [],
-      required: true,
+      required: true
     }, //字段
     showPagination: {
       type: Boolean,
-      default: true,
+      default: true
     },
     frontPagination: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
 
   data() {
     return {
-      currentData: [],
+      currentData: []
     };
   },
   watch: {
@@ -141,22 +112,19 @@ export default {
         if (!val || !val.length) return;
         this._updateTableData(val);
       },
-      immediate: true,
+      immediate: true
     },
     showPagination: {
       handler() {
         this._updateTableData(this.tableData);
-      },
-    },
+      }
+    }
   },
   methods: {
     _updateTableData(val) {
       console.log(this.pageSize, this.currentPage);
       if (this.showPagination && this.frontPagination) {
-        this.currentData = val.slice(
-          this.pageSize * (this.currentPage - 1),
-          this.pageSize * this.currentPage
-        );
+        this.currentData = val.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage);
       } else {
         this.currentData = val;
       }
@@ -166,21 +134,18 @@ export default {
     },
     _pageIndexChange(page) {
       if (this.showPagination && this.frontPagination) {
-        this.currentData = this.tableData.slice(
-          (page - 1) * this.pageSize,
-          page * this.pageSize
-        );
+        this.currentData = this.tableData.slice((page - 1) * this.pageSize, page * this.pageSize);
       }
-      this.$emit("page-change", page);
+      this.$emit('page-change', page);
     },
     _pageSizeChange(pageSize) {
       this.currentData = this.tableData.slice(0, pageSize);
-      this.$emit("page-size-change", pageSize);
+      this.$emit('page-size-change', pageSize);
     },
     getProps(type, attrs) {
       return getProps(type, attrs);
-    },
-  },
+    }
+  }
 };
 </script>
 

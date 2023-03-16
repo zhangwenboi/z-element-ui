@@ -50,7 +50,7 @@ z-element-ui提供了常用的`filter` `directives` `components` 以及一个用
 如果你只需要引入其中一个或几个部分，可以使用一下方法进行引入
 
 ```js
-/** @format */
+
 
 import Vue from 'vue';
 import App from './App.vue';

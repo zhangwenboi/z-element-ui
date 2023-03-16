@@ -8,9 +8,61 @@
 
 在 `z-table` 中使用插槽非常简单,例如 `z-edit-table` 就是使用 `z-table` 实现的.
 
-下面是一个 `z-table` 中使用插槽的例子:
+如果需要对某一列使用插槽,直接在 `z-table` 标签中添加相对应的插槽,例如:
 
-  
+```js
+tableColumn:[
+	{
+		prop:'name',
+		label:'姓名'
+	},
+	{
+		prop:'age',
+		label:'年龄'
+	}
+]
+```
+
+我想对 `name` 这一列使用 `el-tag` 进行展示,那么我将直接在 `z-table` 中加入插槽:
+
+```html
+<z-table :tableColumn="tableColumn" :tableData="tableData">
+    <template #name="scope" >
+    	<el-tag> {{ scope.row.name }}  </el-tag>
+    </template>
+</z-table>
+```
+
+那如果想对 `name` 的表头也使用插槽呢?只需要再添加一个名称为 `nameheader` 的插槽,两者相互独立互不影响, 表头的命名规则就为 ` 那一列的prop` + `header`.
+
+```html
+<z-table :tableColumn="tableColumn" :tableData="tableData">
+    <template #name="scope" >
+    	<el-tag> {{ scope.row.name }}  </el-tag>
+    </template>
+    <template #nameheader >
+    	<el-tag> 只需要 `name` + `header`  </el-tag>
+    </template>
+</z-table>
+```
+
+::: warning
+
+当你使用插槽的时候, `tableColumn` 中必须有该插槽对应的字段
+
+:::
+
+  ::: danger
+
+​	 `z-table` 提供了几个固定名称插槽,在使用时应该避免与 `tableColumn` 的prop重复
+
+
+
+​	`empty`:无数据时插槽
+
+​	``
+
+:::
 
 ## form中的插槽
 
