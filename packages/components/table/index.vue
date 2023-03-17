@@ -1,15 +1,9 @@
 <!-- @format -->
 
-<!-- eslint-disable vue/no-mutating-props -->
-<!-- @format -->
-
 <template>
   <div>
-    <el-table :data="currentData" style="width: 100%" v-bind="getProps('table', $attrs)" v-on="$listeners">
-      <!-- <template #empty class="flex align-middle">
-        <img class="mt-5 w-56" src="./nodata.png" alt="暂无内容" />
-        <span class="text-xl">暂无数据</span>
-      </template> -->
+    <el-table :data="currentData" style="width: 100%" v-bind="getProps('table', $attrs)" v-on="$listeners" ref="elTable">
+      <slot name="empty" slot="empty"></slot>
       <!-- 序号 -->
       <el-table-column v-if="showIndex" type="index" width="45"> </el-table-column>
       <!-- 选择 -->
@@ -31,7 +25,7 @@
         </template>
       </el-table-column>
       <!-- 操作 -->
-      <el-table-column v-if="showOperation" :fixed="showFixed ? 'right' : false" :label="operationLable" :width="operationWidth">
+      <el-table-column v-if="showOperation" :fixed="showFixed && 'right'" :label="operationLable" :width="operationWidth">
         <template #default="scope">
           <slot v-bind="scope" />
         </template>
@@ -43,8 +37,8 @@
         @size-change="_pageSizeChange"
         @current-change="_pageIndexChange"
         :total="frontPagination ? tableData.length : total"
-        :currentPage="currentPage"
-        :pageSize="pageSize"
+        :currentPage.sync="pageIndex"
+        :pageSize.sync="currentPageSize"
       >
       </el-pagination>
     </div>
@@ -78,10 +72,6 @@ export default {
       type: Number,
       default: 1
     },
-    pageSize: {
-      type: Number,
-      default: 10
-    },
     tableData: {
       type: Array,
       default: () => []
@@ -98,19 +88,23 @@ export default {
     frontPagination: {
       type: Boolean,
       default: true
+    },
+    pageSize: {
+      type: Number,
+      default: 10
     }
   },
-
   data() {
     return {
-      currentData: []
+      currentData: [],
+      currentPageSize: this.pageSize,
+      pageIndex: this.currentPage
     };
   },
   watch: {
     tableData: {
       handler(val) {
-        if (!val || !val.length) return;
-        this._updateTableData(val);
+        val && this._updateTableData(val);
       },
       immediate: true
     },
@@ -122,9 +116,8 @@ export default {
   },
   methods: {
     _updateTableData(val) {
-      console.log(this.pageSize, this.currentPage);
       if (this.showPagination && this.frontPagination) {
-        this.currentData = val.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage);
+        this.currentData = val.slice(this.currentPageSize * (this.pageIndex - 1), this.currentPageSize * this.pageIndex);
       } else {
         this.currentData = val;
       }
@@ -134,13 +127,17 @@ export default {
     },
     _pageIndexChange(page) {
       if (this.showPagination && this.frontPagination) {
-        this.currentData = this.tableData.slice((page - 1) * this.pageSize, page * this.pageSize);
+        this.currentData = this.tableData.slice((page - 1) * this.currentPageSize, page * this.currentPageSize);
       }
       this.$emit('page-change', page);
+      this.$emit('update:currentPage', page);
     },
     _pageSizeChange(pageSize) {
-      this.currentData = this.tableData.slice(0, pageSize);
-      this.$emit('page-size-change', pageSize);
+      if (this.showPagination && this.frontPagination) {
+        this.currentData = this.tableData.slice((this.pageIndex - 1) * pageSize, this.pageIndex * pageSize);
+      }
+      this.$emit('size-change', pageSize);
+      this.$emit('update:pageSize', pageSize);
     },
     getProps(type, attrs) {
       return getProps(type, attrs);

@@ -11,6 +11,9 @@ table {
 .text-red {
   color: #f56c6c;
 }
+.text-green {
+  color: #67c23a;
+}
 .border{
   border: 2px solid #003d99;
   padding: 4px;

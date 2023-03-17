@@ -1,4 +1,4 @@
-
+/** @format */
 
 import { getIncludeAttrs, findRef, uuid } from '../../utils/utils';
 import { form as formAttr, inputType } from '../../utils/attrs';
@@ -113,7 +113,7 @@ export default {
           {
             required: true,
             message: label + '必填',
-            trigger: formItem.render instanceof Function ? 'change' : inputType.some((e) => formItem.render.includes(e)) ? 'blur' : 'change'
+            trigger: formItem.render instanceof Function ? 'change' : inputType.some((e) => formItem.render?.includes(e)) ? 'blur' : 'change'
           }
         ];
       } else {

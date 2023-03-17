@@ -30,17 +30,17 @@
 
 ## z-grid-form Attributes
 
-| name             | description                                                  | 注意                                                                                                 |
-| ---------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
-| form             | 将要绑定到 `el-form` `model` 上的对象                        | 必传 object                                                                                          |
-| items            | 要渲染的字段列表,[详情见](/zh/comps/form-item.html#属性介绍) | 必传 Array                                                                                           |
-| rules            | 与 `el-form` 中的 ` rules ` 保持一致                         | object                                                                                               |
-| responsive       | 是否开始响应式,默认为 ` false `                              | boolean                                                                                              |
-| tag              | 同 `el-tag`  tag                                             | string                                                                                               |
-| type             | 同 `el-tag`  type                                            | string                                                                                               |
-| justify          | 同 `el-tag`  justify                                         | string                                                                                               |
-| align            | 同 `el-tag`  align                                           | string                                                                                               |
-| responsiveMethod | 详情见下方                                                   | ``````                                                                                               |
+| name             | description                                                  | 注意                                                         |
+| ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| v-model          | 将要绑定到 `el-form` `model` 上的对象                        | 必传 object                                                  |
+| items            | 要渲染的字段列表,[详情见](/zh/comps/form-item.html#属性介绍) | 必传 Array                                                   |
+| rules            | 与 `el-form` 中的 ` rules ` 保持一致                         | object                                                       |
+| responsive       | 是否开始响应式,默认为 ` false `                              | boolean                                                      |
+| tag              | 同 `el-tag`  tag                                             | string                                                       |
+| type             | 同 `el-tag`  type                                            | string                                                       |
+| justify          | 同 `el-tag`  justify                                         | string                                                       |
+| align            | 同 `el-tag`  align                                           | string                                                       |
+| responsiveMethod | 详情见下方                                                   | ``````                                                       |
 | 更多...          | ---                                                          | 继承`el-form`的全部属性, [更多属性](https://element.eleme.cn/#/zh-CN/component/form#form-attributes) |
 
 ## responsivemethod 

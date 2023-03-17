@@ -2,7 +2,7 @@
 
 <template>
   <el-form ref="editForm" :model="form" size="mini">
-    <zTable ref="tableEditor" showOperation :tableColumn="tableColumn" stripe highlight-current-row :tableData="tableData" v-bind="getProps('tableExtension', $attrs)">
+    <zTable ref="tableEditor" showOperation :tableColumn="tableColumn" stripe highlight-current-row :tableData="tableData" v-bind="getProps('tableExtension', $attrs)" v-on="$listeners">
       <!-- 给表格添加如同z-table一样的配置项 -->
       <template #default="scope">
         <template v-if="scope.row._loading_">
@@ -74,14 +74,6 @@ export default {
       type: Array,
       default: () => []
     },
-    save: {
-      type: Function,
-      default: () => {}
-    },
-    delete: {
-      type: Function,
-      default: () => {}
-    },
     tableColumn: {
       type: Array,
       default: () => []
@@ -105,11 +97,14 @@ export default {
       }
       if (scope.row?._view_) {
         this.validateRow(scope.$index, () => {
-          this.operationDone(scope, this.save, (ifpass = true) => {
-            if (ifpass) {
-              scope.row._view_ = false;
-            }
-          });
+          if (this.$listeners['save-table']) {
+            this.$emit('save-table', {
+              ...scope,
+              loading: this.loadingSwitch(scope)
+            });
+          } else {
+            scope.row._view_ = false;
+          }
         });
       } else {
         scope.row._view_ = true;
@@ -119,10 +114,14 @@ export default {
       return getProps(type, attrs);
     },
     deleteTable(scope) {
-      const index = this.tableData.indexOf(scope.row) !== -1 ? this.tableData.indexOf(scope.row) : this.$attrs.frontPagination ? this.$attrs.currentPage * this.$attrs.pageSize : scope.$index;
-      this.operationDone(scope, this.delete, () => {
-        this.tableData.splice(index, 1);
-      });
+      if (this.$listeners['delete-table']) {
+        this.$emit('delete-table', {
+          ...scope,
+          loading: this.loadingSwitch(scope)
+        });
+      } else {
+        this.tableData.splice(scope.$index, 1);
+      }
     },
     validateRow(index, callback) {
       let props = this.items.filter((e) => e.require).map((e) => `tableData.${index}.${e.prop}`);
@@ -137,20 +136,18 @@ export default {
     /*******
      * @description:
      * @param {*} scope 操作列
-     * @param {*} done 操作的方法
-     * @param {*} callback 操作完成后的回调函数
      * @return {*}
      */
-    operationDone(scope, done, callback) {
-      if (scope.row?._loading_ === undefined) {
-        this.$set(scope.row, '_loading_', true);
-      }
-      scope.row._loading_ = true;
-      done((dealScope) => {
-        scope.row._loading_ = false;
-        dealScope && (scope = dealScope);
-        callback();
-      }, scope);
+    loadingSwitch(scope) {
+      return (loading) => {
+        if (scope.row?._loading_ === undefined) {
+          this.$set(scope.row, '_loading_', loading);
+        }
+        if (!loading && scope.row._view_) {
+          scope.row._view_ = false;
+        }
+        scope.row._loading_ = loading;
+      };
     }
   }
 };
