@@ -94,6 +94,7 @@ module.exports = {
               '/zh/comps/introduce',
               '/zh/comps/table',
               '/zh/comps/edit-table',
+              '/zh/comps/virtual-table',
               '/zh/comps/inline-form',
               '/zh/comps/grid-form',
               '/zh/comps/desc-form',

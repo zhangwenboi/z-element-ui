@@ -1,13 +1,13 @@
 <!-- @format -->
 
 <template>
-  <div>
+  <div :id="tableId">
     <el-table :data="currentData" style="width: 100%" v-bind="getProps('table', $attrs)" v-on="$listeners" ref="elTable">
       <slot name="empty" slot="empty"></slot>
       <!-- 序号 -->
       <el-table-column v-if="showIndex" type="index" width="45"> </el-table-column>
       <!-- 选择 -->
-      <el-table-column v-if="showCheckbox" type="selection" width="45" :fixed="showFixed" />
+      <el-table-column v-if="showCheckbox" type="selection" width="45" :fixed="showFixed"> </el-table-column>
       <!-- 展开 -->
       <el-table-column v-if="showExpand" type="expand" width="45" :fixed="showFixed">
         <template #expand="scope">
@@ -49,7 +49,6 @@
 import { getProps } from '../../utils/utils';
 export default {
   name: 'zTable',
-  components: {},
   props: {
     showCheckbox: { type: Boolean, default: false }, //是否开启多选框
     showFixed: { type: Boolean, default: false }, //是否固定列
@@ -92,6 +91,10 @@ export default {
     pageSize: {
       type: Number,
       default: 10
+    },
+    tableId: {
+      type: String,
+      default: 'zTable'
     }
   },
   data() {
@@ -141,6 +144,9 @@ export default {
     },
     getProps(type, attrs) {
       return getProps(type, attrs);
+    },
+    getRefs(name = 'elTable') {
+      return this.$refs[name];
     }
   }
 };

@@ -49,12 +49,6 @@ export default {
       type: [String, Function]
     }
   },
-  data() {
-    return {};
-  },
-  mounted() {
-    console.log(this.items, this.$attrs, this.$props);
-  },
   methods: {
     descriptionItemAttrs(e) {
       return getProps('descriptionItem', e);

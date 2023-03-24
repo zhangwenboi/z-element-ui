@@ -1,14 +1,7 @@
 <!-- @format -->
 
 <template>
-  <zTable
-    class="z-table"
-    :tableColumn="tableColumn"
-    :tableData="tableData"
-    :height="300"
-  >
-    ></zTable
-  >
+  <zTable class="z-table" ref="table" :tableColumn="tableColumn" :tableData="tableData" :height="300"> ></zTable>
 </template>
 
 <script>
@@ -49,6 +42,9 @@ export default {
       ],
       tableData: randomTableData()
     };
+  },
+  mounted() {
+    console.log(this.$refs.table.$refs.elTable.resizeState);
   }
 };
 </script>

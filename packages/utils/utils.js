@@ -133,3 +133,18 @@ export const deepClone = function (obj) {
   }
   return newObj;
 };
+//创建动态样式
+export const dynamicStyleRule = function (id, styleRule) {
+  let styleId = 'dynamic-style-' + id;
+  let styleElement = document.getElementById(styleId);
+  if (styleElement) {
+    styleElement.parentNode.removeChild(styleElement);
+  }
+  if (styleRule) {
+    styleElement = document.createElement('style');
+    styleElement.type = 'text/css';
+    styleElement.id = styleId;
+    document.getElementsByTagName('head')[0].appendChild(styleElement);
+    styleElement.appendChild(document.createTextNode(styleRule));
+  }
+};

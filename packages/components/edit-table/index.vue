@@ -2,7 +2,7 @@
 
 <template>
   <el-form ref="editForm" :model="form" size="mini">
-    <zTable ref="tableEditor" showOperation :tableColumn="tableColumn" stripe highlight-current-row :tableData="tableData" v-bind="getProps('tableExtension', $attrs)" v-on="$listeners">
+    <zTable ref="tableEditor" showOperation :tableColumn="tableColumn" :tableData="tableData" v-bind="getProps('tableExtension', $attrs)" v-on="$listeners">
       <!-- 给表格添加如同z-table一样的配置项 -->
       <template #default="scope">
         <template v-if="scope.row._loading_">
@@ -12,6 +12,12 @@
           <el-button type="text" size="mini" @click="editTable(scope)">{{ scope.row._view_ ? '保存' : '编辑' }}</el-button>
           <el-button type="text" size="mini" @click="deleteTable(scope)">删除</el-button>
         </template>
+      </template>
+      <template v-for="(index, name) in $slots" v-slot:[name]>
+        <slot :name="name" />
+      </template>
+      <template v-for="(index, name) in $scopedSlots" v-slot:[name]="data">
+        <slot :name="name" v-bind="data"></slot>
       </template>
       <template v-for="(header, index) in requiredFields" #[header]="{ column }"> {{ column.label }}<span class="text-red" :key="index"> * </span> </template>
       <template v-for="item in items" #[item.prop]="scope">
