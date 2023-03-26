@@ -1,9 +1,20 @@
 <!-- @format -->
 
 <template>
-  <zVirtualTable class="z-table" ref="table" :tableColumn="tableColumn" :tableData="tableData" :height="300" :showCheckbox="showCheckbox" showOperation showFixed>
+  <zVirtualTable
+    class="z-table"
+    ref="table"
+    :tableColumn="tableColumn"
+    :tableData="tableData"
+    :height="300"
+    :showCheckbox="showCheckbox"
+    showOperation
+    showFixed
+  >
     <template #default="scope">
-      <el-button type="text" size="mini" @click="scopeData(scope)">编辑</el-button>
+      <el-button type="text" size="mini" @click="scopeData(scope)"
+        >编辑</el-button
+      >
       <el-button type="text" size="mini">删除</el-button>
     </template>
   </zVirtualTable>
@@ -31,11 +42,11 @@ export default {
       });
     };
     return {
-      tableColumn: randomTableColumn(5),
+      tableColumn: randomTableColumn(10),
       tableData: randomTableData(30000)
     };
   },
-  mounted() {},
+  mounted() { },
   methods: {
     scopeData(scope) {
       console.log(scope);

@@ -1,12 +1,29 @@
 <!-- @format -->
 
 <template>
-  <zTable v-bind="$attrs" v-on="$listeners" :tableId="tableId" :frontPagination="false" :showPagination="false" :tableData="renderData" :tableColumn="column" ref="table" :height="height">
+  <zTable
+    v-bind="$attrs"
+    v-on="$listeners"
+    :tableId="tableId"
+    :frontPagination="false"
+    :showPagination="false"
+    :tableData="renderData"
+    :tableColumn="column"
+    ref="table"
+    :height="height"
+  >
     <template #selectionheader>
-      <el-checkbox v-bind="checkboxAll" @input="_selectionAllInput"></el-checkbox>
+      <el-checkbox
+        v-bind="checkboxAll"
+        @input="_selectionAllInput"
+      ></el-checkbox>
     </template>
     <template #selection="{ row, $index }">
-      <checkboxSingle v-bind="{ row, $index }" @input="_handleSelectionChange(row, $index)"> </checkboxSingle>
+      <checkboxSingle
+        v-bind="{ row, $index }"
+        @input="_handleSelectionChange(row, $index)"
+      >
+      </checkboxSingle>
     </template>
     <template v-for="(index, name) in $slots" v-slot:[name]>
       <slot :name="name" />
@@ -32,6 +49,7 @@ export default {
         const { selectList, _disabledCheckbox, virtualScroll } = parent,
           { startIndex } = virtualScroll,
           index = startIndex + $index;
+
         const isSelected = selectList.filter((item) => {
           return item[0] <= index && item[1] >= index;
         })?.length;
@@ -65,7 +83,7 @@ export default {
       },
       renderData: [],
       selectList: this.selection,
-      selectAll: false,
+      ifSelectAll: false,
       scrollObj: {
         lastScrollTop: 0,
         lastScrollLeft: 0
@@ -124,12 +142,12 @@ export default {
       const newTableColumn = (
         this.showCheckbox
           ? [
-              {
-                prop: 'selection',
-                width: 45,
-                algin: 'center'
-              }
-            ]
+            {
+              prop: 'selection',
+              width: 45,
+              algin: 'center'
+            }
+          ]
           : []
       ).concat(this.tableColumn);
       return newTableColumn;
@@ -239,7 +257,7 @@ export default {
       this._updateVertialData();
     },
     // 横向更新渲染数据
-    _updateHorizontal() {},
+    _updateHorizontal() { },
     _updateRenderData() {
       if (this.virtualHorizontal) {
         const type = this._scrollDirection();
@@ -293,12 +311,12 @@ export default {
     },
     _selectionAllInput(v) {
       const virtual = this.virtualScroll;
-      if (virtual.selectAll) {
+      if (this.ifSelectAll) {
         this.selectList = [];
       } else {
-        this.selectList = [[0, this.virtualScroll.virtualData.length - 1]];
+        this.selectList = [[0, virtual.virtualData.length - 1]];
       }
-      virtual.selectAll = !virtual.selectAll;
+      this.ifSelectAll = !this.ifSelectAll;
 
       const selectAll = this.$listeners['select-all'];
       const selectionChange = this.$listeners['selection-change'];
@@ -310,6 +328,56 @@ export default {
       }
     },
     _handleSelectionChange(row, i) {
+      // 如果已经是选中状态,将selectList中的数组分割成两个数组
+
+      const currentIndex = this.getVirtualRowIndex(i);
+      if (this.selectList.length > 0) {
+        const parentArray = this.selectList.find((item, index) => {
+          return item[0] <= currentIndex && item[1] >= currentIndex;
+        })
+        console.log("🚀 ~ this.selectList:", this.selectList);
+
+        if (parentArray) {
+          const index = this.selectList.indexOf(parentArray);
+
+          // 如果是第一个,则将第一个值加一,如果是最后一个,则将最后一个值减一,如果是中间的,则将当前的值减一,将后面的值加一
+          if (currentIndex === parentArray[0]) {
+            this.selectList.splice(index, 1, [currentIndex + 1, parentArray[1]]);
+          } else if (currentIndex === parentArray[1]) {
+            this.selectList.splice(index, 1, [parentArray[0], currentIndex - 1]);
+          } else {
+            this.selectList.splice(index, 1, [parentArray[0], currentIndex - 1], [currentIndex + 1, parentArray[1]]);
+          }
+          this.ifSelectAll = false;
+          return;
+        } else {
+          // 如果当前选项不在selectList中的所有数组中,则将当前选项的下标组合到selectList中
+
+          if (currentIndex < this.selectList[0][0]) {
+            this.selectList[0][0] = currentIndex;
+
+          } else if (currentIndex > this.selectList[this.selectList.length - 1][1]) {
+            this.selectList[this.selectList.length - 1][1] = currentIndex;
+          } else {
+            for (let i = 0; i < this.selectList.length; i++) {
+              if (Math.abs(this.selectList[i][0] - currentIndex) === 1) {
+
+
+              } else if (Math.abs(this.selectList[i][1] - currentIndex) === 1) {
+
+
+              }
+              if (currentIndex > this.selectList[i][0] && currentIndex < this.selectList[i][1]) {
+                this.selectList.splice(i, 0, [currentIndex, currentIndex]);
+                break;
+              }
+            }
+          }
+
+
+          this.ifSelectAll = false;
+        }
+      }
       const selection = this.selectList;
       let index = selection.indexOf(row);
       if (index == -1) {
