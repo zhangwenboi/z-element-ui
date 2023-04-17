@@ -14,12 +14,12 @@ module.exports = {
   locales: {
     // 键名是该语言所属的子路径
     // 作为特例，默认语言可以使用 '/' 作为其路径。
-    '/': {
+    '/en': {
       lang: 'en-US', // 将会被设置为 <html> 的 lang 属性
       title: 'z-element-ui',
       description: 'Based on Vue2 & Element-UI encapsulation, fully data-driven, ready to use out of the box!'
     },
-    '/zh/': {
+    '/': {
       lang: 'zh-CN',
       title: 'z-element-ui',
       description: '基于element-ui & vue2进行封装,极简风格，开箱即用.'
@@ -31,35 +31,35 @@ module.exports = {
     smoothScroll: true,
     sidebar: 'auto',
     locales: {
+      // '/en': {
+      //   selectText: 'Languages',
+      //   label: 'English',
+      //   ariaLabel: 'Languages',
+      //   editLinkText: 'Edit this page on GitHub',
+      //   serviceWorker: {
+      //     updatePopup: {
+      //       message: 'New content is available.',
+      //       buttonText: 'Refresh'
+      //     }
+      //   },
+      //   algolia: {},
+      //   nav: [
+      //     {
+      //       text: 'Nested',
+      //       link: '/nested/',
+      //       ariaLabel: 'Nested'
+      //     }
+      //   ],
+      //   sidebar: {
+      //     '/': [
+      //       /* ... */
+      //     ],
+      //     '/nested/': [
+      //       /* ... */
+      //     ]
+      //   }
+      // },
       '/': {
-        selectText: 'Languages',
-        label: 'English',
-        ariaLabel: 'Languages',
-        editLinkText: 'Edit this page on GitHub',
-        serviceWorker: {
-          updatePopup: {
-            message: 'New content is available.',
-            buttonText: 'Refresh'
-          }
-        },
-        algolia: {},
-        nav: [
-          {
-            text: 'Nested',
-            link: '/nested/',
-            ariaLabel: 'Nested'
-          }
-        ],
-        sidebar: {
-          '/': [
-            /* ... */
-          ],
-          '/nested/': [
-            /* ... */
-          ]
-        }
-      },
-      '/zh/': {
         // 多语言下拉菜单的标题
         selectText: '选择语言',
         // 该语言在下拉菜单中的标签
@@ -98,7 +98,7 @@ module.exports = {
               '/zh/comps/inline-form',
               '/zh/comps/grid-form',
               '/zh/comps/desc-form',
-              { title: '单组件', collapsable: false, children: ['/zh/comps/form-item', '/zh/comps/select'] }
+              { title: '单组件', collapsable: false, children: ['/zh/comps/form-item', '/zh/comps/select', '/zh/comps/theme'] }
             ]
           },
           {

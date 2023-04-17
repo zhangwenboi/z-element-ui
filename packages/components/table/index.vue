@@ -16,7 +16,7 @@
       </el-table-column>
 
       <!-- 通用 -->
-      <el-table-column v-for="(item, index) in tableColumn" :key="item + index" v-bind="getProps('tableColumn', item)">
+      <el-table-column v-for="(item, index) in tableColumn" :key="item.prop + index" v-bind="getProps('tableColumn', item)">
         <template v-if="_showSlot(item.prop + 'header')" #header="{ column, $index }">
           <slot v-bind="{ column, $index }" :name="item.prop + 'header'"></slot>
         </template>

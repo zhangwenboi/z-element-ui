@@ -1,6 +1,6 @@
 {
   "name": "z-element-ui",
-  "version": "1.0.0",
+  "version": "1.1.2",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "element-ui": "^2.15.13",
-    "vue": "^2.7.7"
+    "vue": "^2.7.7",
+    "vue-worker": "^1.2.1"
   },
   "devDependencies": {
     "@vitejs/plugin-legacy": "^4.0.1",
@@ -28,5 +29,24 @@
     "vite": "^4.1.1",
     "vite-plugin-style-inject": "^0.0.1",
     "vuepress": "^1.9.8"
-  }
+  },
+  "description": "基于element-ui的组件库,简单快速",
+  "main": "packages/index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "files": [
+    "packages",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhangwenboi/z-element-ui.git"
+  },
+  "author": "1953954864@qq.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zhangwenboi/z-element-ui/issues"
+  },
+  "homepage": "https://github.com/zhangwenboi/z-element-ui#readme"
 }

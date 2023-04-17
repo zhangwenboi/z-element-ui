@@ -1,3 +1,4 @@
+/** @format */
 
 import deepmerge from 'deepmerge';
 import basicOptions from './utils/options.js';
@@ -5,6 +6,7 @@ import basicOptions from './utils/options.js';
 import componentsModule from './components';
 import directivesModule from './directives';
 import filtersModule from './filters';
+import VueWorker from 'vue-worker';
 
 // // 引入axios配置
 // import axiosHttp from './http';
@@ -24,8 +26,9 @@ const install = (Vue, option = {}) => {
 
   Vue.use(directives, options.directives);
   Vue.use(filters);
+  Vue.use(VueWorker);
   // Vue.config.errorHandler = errorHandle;
-  // Vue.prototype.$kicHttp = axiosHttp(options.axios);
+  // Vue.prototype.$http = axiosHttp(options.axios);
   // Vue.prototype.$Func = funcSet;
   // Vue.prototype.$Valid = Valid;
   // setEncrypt(Vue, options);

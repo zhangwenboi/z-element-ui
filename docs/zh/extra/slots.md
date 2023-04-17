@@ -54,7 +54,7 @@ tableColumn:[
 
   ::: danger
 
-​	 `z-table` 提供了几个固定名称插槽,在使用时应该避免与 `tableColumn` 的prop重复
+​	 `z-table` 提供了几个具名插槽,在使用时应该避免与 `tableColumn` 的prop重复
 
 
 

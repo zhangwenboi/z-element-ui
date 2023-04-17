@@ -1,16 +1,13 @@
 <!-- @format -->
 
 <template>
-  <div>
-    <slot>
-      <el-color-picker
-        :predefine="['#F5222D', '#FA541C', '#FADB14', '#3EAF7C', '#13C2C2', '#1890FF', '#722ED1', '#EB2F96']"
-        class="theme-picker"
-        popper-class="theme-picker-dropdown"
-        @change="changeColor"
-      />
-    </slot>
-  </div>
+  <el-color-picker
+    v-model="Value"
+    :predefine="['#F5222D', '#FA541C', '#FADB14', '#3EAF7C', '#13C2C2', '#1890FF', '#722ED1', '#EB2F96']"
+    class="theme-picker"
+    popper-class="theme-picker-dropdown"
+    @change="changeColor"
+  />
 </template>
 <script>
 export default {
@@ -26,10 +23,15 @@ export default {
       }
     };
   },
+  model: {
+    prop: 'color',
+    event: 'input'
+  },
   props: {
     //多颜色配置
     color: {
-      type: [Object, String]
+      type: [Object, String],
+      default: '#409EFF'
     },
     //主题请求地址
     url: {
@@ -40,6 +42,20 @@ export default {
     caches: {
       type: Boolean,
       default: true
+    }
+  },
+  computed: {
+    Value: {
+      get() {
+        return typeof this.color === 'string' ? this.color : this.color.primary;
+      },
+      set(val) {
+        if (typeof this.color === 'string') {
+          this.$emit('input', val);
+        } else {
+          this.$emit('input', { ...this.color, primary: val });
+        }
+      }
     }
   },
   watch: {
@@ -75,7 +91,6 @@ export default {
       }
       const originColorList = processColorList(originalObject);
       const newColorList = processColorList(colorValue);
-      console.log('🚀 ~ originColorList, newColorList', this.originalColorObj, colorValue);
       this.setColors(this.chalk, colorValue, originColorList, newColorList);
     },
     setColors(style, colorValue, originColorList, newColorList) {

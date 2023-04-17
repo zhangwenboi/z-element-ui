@@ -137,6 +137,7 @@ export const deepClone = function (obj) {
 export const dynamicStyleRule = function (id, styleRule) {
   let styleId = 'dynamic-style-' + id;
   let styleElement = document.getElementById(styleId);
+
   if (styleElement) {
     styleElement.parentNode.removeChild(styleElement);
   }
@@ -145,6 +146,7 @@ export const dynamicStyleRule = function (id, styleRule) {
     styleElement.type = 'text/css';
     styleElement.id = styleId;
     document.getElementsByTagName('head')[0].appendChild(styleElement);
+
     styleElement.appendChild(document.createTextNode(styleRule));
   }
 };

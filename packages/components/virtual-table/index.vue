@@ -1,67 +1,60 @@
 <!-- @format -->
 
 <template>
-  <zTable
-    v-bind="$attrs"
-    v-on="$listeners"
-    :tableId="tableId"
-    :frontPagination="false"
-    :showPagination="false"
-    :tableData="renderData"
-    :tableColumn="column"
-    ref="table"
-    :height="height"
-  >
-    <template #selectionheader>
-      <el-checkbox
-        v-bind="checkboxAll"
-        @input="_selectionAllInput"
-      ></el-checkbox>
-    </template>
-    <template #selection="{ row, $index }">
-      <checkboxSingle
-        v-bind="{ row, $index }"
-        @input="_handleSelectionChange(row, $index)"
-      >
-      </checkboxSingle>
-    </template>
-    <template v-for="(index, name) in $slots" v-slot:[name]>
-      <slot :name="name" />
-    </template>
-    <template v-for="(index, name) in $scopedSlots" v-slot:[name]="data">
-      <slot :name="name" v-bind="data"></slot>
-    </template>
-  </zTable>
+  <el-table :id="tableId" :data="renderData" style="width: 100%" v-bind="getProps('table', $attrs)" v-on="$listeners" ref="elTable" :height="height">
+    <slot name="empty" slot="empty"></slot>
+    <!-- 选择 -->
+    <el-table-column v-if="showCheckbox" width="45">
+      <template #header>
+        <el-checkbox v-bind="checkboxAll" @input="_selectionAllInput"></el-checkbox>
+      </template>
+      <template #default="{ row, $index }">
+        <checkboxSingle v-bind="{ row, $index, ifSelectAll }" @input="_handleSelectionChange(row, $index)"> </checkboxSingle>
+      </template>
+    </el-table-column>
+    <!-- 序号 -->
+    <el-table-column v-if="showIndex" type="index" width="45"> </el-table-column>
+    <!-- 展开 -->
+    <el-table-column v-if="showExpand" type="expand" width="45" :fixed="showFixed">
+      <template #expand="scope">
+        <slot v-bind="scope" name="expand" />
+      </template>
+    </el-table-column>
+
+    <!-- 通用 -->
+    <el-table-column v-for="(item, index) in renderColumns" :key="item.prop + index" v-bind="getProps('tableColumn', item)">
+      <template v-if="_showSlot(item.prop + 'header')" #header="{ column, $index }">
+        <slot v-bind="{ column, $index }" :name="item.prop + 'header'"></slot>
+      </template>
+      <template v-if="_showSlot(item.prop)" #default="{ row, column, $index }">
+        <slot v-bind="{ row, column, $index }" :name="item.prop"></slot>
+      </template>
+    </el-table-column>
+    <!-- 操作 -->
+    <el-table-column v-if="showOperation" :fixed="showFixed && 'right'" :label="operationLable" :width="operationWidth">
+      <template #default="scope">
+        <slot v-bind="scope" />
+      </template>
+    </el-table-column>
+  </el-table>
 </template>
+
 <script>
-import zTable from '../table/index.vue';
-import { orderBy } from 'element-ui/packages/table/src/util.js';
-import { dynamicStyleRule, uuid } from '../../utils/utils';
+import { dynamicStyleRule, uuid, getProps } from '../../utils/utils';
 
 export default {
-  name: 'virtualTable',
+  name: 'zTable',
   components: {
-    zTable,
     checkboxSingle: {
       name: 'checkboxSingle',
       functional: true,
-      render(h, { props: { row, $index }, listeners, parent }) {
-        const { selectList, _disabledCheckbox, virtualScroll } = parent,
-          { startIndex } = virtualScroll,
-          index = startIndex + $index;
-
-        const isSelected = selectList.filter((item) => {
-          return item[0] <= index && item[1] >= index;
-        })?.length;
-        // 判断是否选中
-        const isDisabled = _disabledCheckbox(row, index);
-
+      render(h, { props: { row, $index, ifSelectAll }, listeners }) {
         // 生成多选框
         return h('el-checkbox', {
           class: 'virtual-scroll-checkbox',
           props: {
-            value: !!isSelected,
-            disabled: isDisabled
+            value: !!row?.$v_checked || ifSelectAll,
+            disabled: !!row.$v_disabled
           },
           on: {
             input: listeners['input'],
@@ -71,95 +64,136 @@ export default {
       }
     }
   },
-  data() {
-    return {
-      virtualScroll: {
-        virtualData: [],
-        startIndex: 0,
-        endIndex: 0,
-        offsetNum: 3,
-        resizeState: null,
-        selectAll: false
-      },
-      renderData: [],
-      selectList: this.selection,
-      ifSelectAll: false,
-      scrollObj: {
-        lastScrollTop: 0,
-        lastScrollLeft: 0
-      },
-      tableDom: {
-        warpper: '',
-        warppers: ''
-      },
-      tableId: 'virtual-table' + uuid(4, 1)
-    };
-  },
   props: {
+    showCheckbox: { type: Boolean, default: false }, //是否开启多选框
+    showFixed: { type: Boolean, default: false }, //是否固定列
+    showExpand: { type: Boolean, default: false }, //是否可以展开
+    showOperation: { type: Boolean, default: false }, //是否包含操作列
+    showIndex: { type: Boolean, default: false }, //是否包含序号
+    operationLable: {
+      type: String,
+      default: '操作'
+    },
+    operationWidth: {
+      type: String,
+      default: '120px'
+    },
+
     tableData: {
       type: Array,
-      default: () => []
+      default: () => [],
+      required: true
     },
     tableColumn: {
       type: Array,
-      default: () => []
+      default: () => [],
+      required: true
     },
     rowHeight: {
       type: Number,
       default: 40
     },
-    height: {
+    cellWidth: {
       type: Number,
-      default: 300
+      default: 100
     },
-    showCheckbox: {
-      type: [Boolean, Function, String],
-      default: false
-    },
-    selection: {
-      type: Array,
-      default: () => []
+    height: {
+      type: [Number, String],
+      default: '100%'
     },
     virtualHorizontal: {
       type: [Boolean, String],
       default: false
     }
   },
-  computed: {
-    checkboxAll() {
-      const virtual = this.virtualScroll;
-      const value = virtual.virtualData?.length > 0 && this.selectList?.length === virtual.virtualData?.length;
-      const disabled = virtual.virtualData?.length === 0;
-      const indeterminate = this.selectList?.length > 0 && !value;
-      return {
-        value,
-        disabled,
-        indeterminate
-      };
+  data() {
+    return {
+      virtualScroll: {
+        virtualData: [],
+        startIndex: 0,
+        endIndex: 13,
+        translateX: 0,
+        offsetNum: 3,
+        resizeState: null
+      },
+      tableId: 'virtual-table' + uuid(4, 1),
+      tableDom: {
+        warpper: '',
+        warppers: ''
+      },
+      scrollObj: {
+        scrollLeft: 0,
+        scrollTop: 0
+      },
+      ifSelectAll: false,
+      selectNum: 0,
+      renderData: [],
+      renderColumns: [],
+      checkboxAll: {
+        value: false,
+        indeterminate: false,
+        disabled: false
+      }
+    };
+  },
+  computed: {},
+  watch: {
+    tableData: {
+      handler(val) {
+        if (val && val.length) {
+          const { startIndex, endIndex } = this.virtualScroll;
+          this.renderData = val.slice(startIndex, endIndex);
+          this.$worker
+            .run(
+              (val) => {
+                const len = val.length;
+                for (let i = 0; i < len; i++) {
+                  if (val[i].$v_checked) {
+                    this.checkboxAll.indeterminate = true;
+                    continue;
+                  } else {
+                    val[i].$v_checked = false;
+                  }
+                }
+                return val;
+              },
+              [this.tableData]
+            )
+            .then((res) => {
+              this._refreshVirtualData(res);
+            });
+        } else {
+          this.renderData = [];
+          this.checkboxAll.value = false;
+        }
+      },
+      immediate: true
     },
-
-    column() {
-      const newTableColumn = (
-        this.showCheckbox
-          ? [
-            {
-              prop: 'selection',
-              width: 45,
-              algin: 'center'
-            }
-          ]
-          : []
-      ).concat(this.tableColumn);
-      return newTableColumn;
+    selectNum(val) {
+      if (val === this.tableData.length) {
+        this.checkboxAll.indeterminate = false;
+        this.checkboxAll.value = true;
+        this.ifSelectAll = true;
+      } else if (val !== 0) {
+        this.checkboxAll.indeterminate = true;
+        this.ifSelectAll = false;
+      } else {
+        this.checkboxAll.indeterminate = this.checkboxAll.value = false;
+        this.ifSelectAll = false;
+      }
     }
+  },
+  created() {
+    this.renderColumns = this.tableColumn;
   },
   mounted() {
     //如果动态开启虚拟滚动，需要重新计算表格高度
     // 获取表格的宽高,格式为 { height : number, width : number }}
-    this.virtualScroll.resizeState = this.$refs.table.getRefs().resizeState;
+    this.virtualScroll.resizeState = this.getRefs().resizeState;
 
     // 给表格的 tbody 添加一个监听滚动事件
-    this._getScrollWarppers().warpper.addEventListener('scroll', this._onVirtualScroll);
+    this.tableDom = this._getScrollWarppers();
+    this.tableDom.warpper.addEventListener('scroll', this._onVirtualScroll);
 
     // 给表格生成一个动态样式 <style></style>
     dynamicStyleRule(this.tableId, this._getVirtualStyleRule());
@@ -168,31 +202,36 @@ export default {
     // 销毁时移除动态样式
     dynamicStyleRule(this.tableId);
   },
-  watch: {
-    // 监听表格数据变化
-    tableData: {
-      handler(newv, oldv) {
-        // 如果数据有变化，将选中的数据清空
-        if (oldv !== newv) this.selectList = [];
-
-        // 更新渲染数据
-        if (newv && newv.length) this._refreshVirtualData();
-      }
-    },
-    // 监听表格高度变化,然后更新相关样式,以及更新现在高度下的渲染位置
-    'virtualScroll.resizeState.height'(v) {
-      v && this._updateVertialData();
-    }
-  },
-
   methods: {
+    _showSlot(prop) {
+      return this.$scopedSlots[prop] || this.$slots[prop];
+    },
+    getProps(type, attrs) {
+      return getProps(type, attrs);
+    },
+    getRefs(name = 'elTable') {
+      return this.$refs[name];
+    },
+    // 防抖
+    _debounce(fn, delay) {
+      let timer = null;
+      return function () {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          fn.apply(this, arguments);
+        }, delay);
+      };
+    },
     // 垂直更新渲染数据
     _updateVertialData() {
+      const { offsetNum, virtualData, translateX } = this.virtualScroll;
+
+      if (!virtualData && !virtualData.length) return;
       // 计算开始结束渲染位置
-      const { offsetNum } = this.virtualScroll;
-      const virtualData = Object.freeze(this.tableData);
+
       // 获取滚动容器
-      const { warpper, warppers } = (this.tableDom = this._getScrollWarppers());
+      const { warpper, warppers } = this.tableDom;
+
       // 获取每一行的高度
       const rowHeight = this.rowHeight;
       // 获取滚动条的位置
@@ -212,8 +251,10 @@ export default {
 
       const placeholderHeight = virtualData?.length * rowHeight - renderData?.length * rowHeight;
       // 设置实际的高度
+
       warppers.forEach((el) => {
         let placeholder = el.querySelector('.virtual-scroll-placeholder');
+
         if (placeholder) {
           placeholder.style.height = placeholderHeight + 'px';
         } else {
@@ -222,17 +263,19 @@ export default {
           placeholder.style.height = placeholderHeight + 'px';
           el.appendChild(placeholder);
         }
-        el.querySelector('.el-table__body').style.transform = `translateY(${startIndex * rowHeight}px)`;
+        const transformY = startIndex * rowHeight;
+        this._updateTransform(el, translateX, transformY);
       });
-      this.renderData = Object.freeze(renderData);
+
+      this.renderData = renderData;
+
       // 更新渲染数据
-      this.virtualScroll = Object.freeze({
+      this.virtualScroll = {
         ...this.virtualScroll,
-        virtualData,
         startIndex,
         endIndex,
         placeholderHeight
-      });
+      };
     },
     _disabledCheckbox(row, index) {
       if (this.showCheckbox && this.showCheckbox.constructor === Function) return !this.showCheckbox(row, index);
@@ -240,27 +283,93 @@ export default {
     },
 
     // 刷新虚拟数据,用来保持现在的滚动条位置
-    _refreshVirtualData() {
+    _refreshVirtualData(data) {
       // 判断column中是否有排序
       // ## 此处需要对数据名称进行改动,并且添加排序方法
       const sortColumn = this.tableColumn.find((v) => v.sortable);
 
       //获取 el-table 中 store 存储的排序的列
-      const sortingColumn = this.$refs.table.getRefs().store._data.states.sortingColumn;
+      const sortingColumn = this.getRefs().store._data.states.sortingColumn;
       // 如果有排序,则使用 element-ui 的 table 的排序方法
       if (sortColumn && sortingColumn) {
-        this.virtualScroll.virtualData = Object.freeze(orderBy(this.tableData, sortingColumn.property, sortingColumn.order, sortingColumn.sortMethod, sortingColumn.sortBy));
+        this.virtualScroll.virtualData = orderBy(data, sortingColumn.property, sortingColumn.order, sortingColumn.sortMethod, sortingColumn.sortBy);
       } else {
-        this.virtualScroll.virtualData = Object.freeze(this.tableData);
+        this.virtualScroll.virtualData = data;
       }
-
+      if (this.virtualHorizontal) {
+        this._updateHorizontal();
+      } else {
+        this.renderColumns = this.tableColumn;
+      }
       this._updateVertialData();
     },
     // 横向更新渲染数据
-    _updateHorizontal() { },
+    _updateHorizontal() {
+      const { offsetNum } = this.virtualScroll;
+      // 计算开始结束渲染位置
+      // 获取滚动容器
+      const { warpper, warppers } = this.tableDom;
+
+      // 获取每一行的宽度
+      const cellWidth = this.cellWidth;
+      // 获取滚动条的位置
+      const scrollLeft = warppers[0]['scrollLeft'] || 0;
+      // 计算开始结束渲染位置
+      const offsetWidth = offsetNum * cellWidth;
+      // 获取表格的高度
+      const viewportWidth = warpper['clientWidth'];
+
+      // 计算开始结束索引(下标)
+      let horizonStartIndex = Math.floor((scrollLeft - offsetWidth) / cellWidth);
+
+      let horizonEndIndex = Math.ceil((scrollLeft + offsetWidth + viewportWidth) / cellWidth);
+
+      // 限制索引范围
+      if (horizonStartIndex < 0) horizonStartIndex = 0;
+      if (horizonEndIndex > this.tableColumn?.length) horizonEndIndex = this.tableColumn?.length;
+      // 获取要展示的字段数据
+      const renderColumns = Object.freeze(this.tableColumn.slice(horizonStartIndex, horizonEndIndex));
+
+      let translateX = horizonStartIndex * cellWidth;
+      // 计算出滚动条的位置
+      if (scrollLeft >= offsetWidth) {
+        translateX = scrollLeft - offsetWidth;
+      }
+      const placeholderWidth = this.tableColumn?.length * cellWidth - renderColumns?.length * cellWidth;
+      // 设置实际的高度
+
+      warppers.forEach((el) => {
+        let placeholder = el.querySelector('.virtual-scroll-placeholder');
+
+        if (placeholder) {
+          placeholder.style.width = placeholderWidth + 'px';
+        } else {
+          placeholder = document.createElement('div');
+          placeholder.setAttribute('class', 'virtual-scroll-placeholder');
+          placeholder.style.width = placeholderWidth + 'px';
+          el.appendChild(placeholder);
+        }
+        this._updateTransform(el, translateX);
+
+        // 设置表格的translateX
+      });
+
+      this.renderColumns = renderColumns;
+
+      // 更新渲染数据
+      this.virtualScroll = {
+        ...this.virtualScroll,
+        placeholderWidth,
+        translateX
+      };
+    },
+    _updateTransform(el, translateX = this.virtualScroll.translateX, translateY = this.virtualScroll.startIndex * this.rowHeight) {
+      el.querySelector('.el-table__body').style.transform = `translate(${translateX}px,${translateY}px)`;
+    },
     _updateRenderData() {
       if (this.virtualHorizontal) {
         const type = this._scrollDirection();
+
         if (type === 'vertical') {
           this._updateVertialData();
         } else {
@@ -280,15 +389,15 @@ export default {
       // 获取滚动条的位置
       const currentScrollTop = warppers[0]['scrollTop'] || 0;
       const currentScrollLeft = warppers[0]['scrollLeft'] || 0;
-      const { lastScrollTop, lastScrollLeft } = this.scrollObj;
-      if (currentScrollTop !== lastScrollTop) {
+      const { scrollTop, scrollLeft } = this.scrollObj;
+      if (currentScrollTop !== scrollTop) {
         // 垂直滚动
-        this.scrollObj.lastScrollTop = currentScrollTop;
+        this.scrollObj.scrollTop = currentScrollTop;
         return 'vertical';
       }
-      if (currentScrollLeft !== lastScrollLeft) {
+      if (currentScrollLeft !== scrollLeft) {
         // 水平滚动
-        this.scrollObj.lastScrollLeft = currentScrollLeft;
+        this.scrollObj.scrollLeft = currentScrollLeft;
         return 'horizontal';
       }
     },
@@ -310,87 +419,59 @@ export default {
       return this.virtualScroll.startIndex + index;
     },
     _selectionAllInput(v) {
-      const virtual = this.virtualScroll;
       if (this.ifSelectAll) {
-        this.selectList = [];
+        this.selectNum = 0;
+        this.renderData.forEach((v) => {
+          v['$v_checked'] = false;
+        });
       } else {
-        this.selectList = [[0, virtual.virtualData.length - 1]];
+        this.selectNum = this.tableData.length;
+        this.renderData.forEach((v) => {
+          v['$v_checked'] = true;
+        });
       }
-      this.ifSelectAll = !this.ifSelectAll;
+
+      this.$worker
+        .run(
+          (val, ifSelectAll) => {
+            return val.map((v) => {
+              v['$v_checked'] = !ifSelectAll;
+              return v;
+            });
+          },
+          [this.tableData, this.ifSelectAll]
+        )
+        .then((res) => {
+          this.virtualScroll.virtualData = res;
+        });
 
       const selectAll = this.$listeners['select-all'];
       const selectionChange = this.$listeners['selection-change'];
       if (!!selectAll) {
-        selectAll(this.selectList);
+        selectAll(this.selectNum);
       }
       if (!!selectionChange) {
-        selectionChange(this.selectList);
+        selectionChange(this.selectNum);
       }
     },
     _handleSelectionChange(row, i) {
-      // 如果已经是选中状态,将selectList中的数组分割成两个数组
-
-      const currentIndex = this.getVirtualRowIndex(i);
-      if (this.selectList.length > 0) {
-        const parentArray = this.selectList.find((item, index) => {
-          return item[0] <= currentIndex && item[1] >= currentIndex;
-        })
-        console.log("🚀 ~ this.selectList:", this.selectList);
-
-        if (parentArray) {
-          const index = this.selectList.indexOf(parentArray);
-
-          // 如果是第一个,则将第一个值加一,如果是最后一个,则将最后一个值减一,如果是中间的,则将当前的值减一,将后面的值加一
-          if (currentIndex === parentArray[0]) {
-            this.selectList.splice(index, 1, [currentIndex + 1, parentArray[1]]);
-          } else if (currentIndex === parentArray[1]) {
-            this.selectList.splice(index, 1, [parentArray[0], currentIndex - 1]);
-          } else {
-            this.selectList.splice(index, 1, [parentArray[0], currentIndex - 1], [currentIndex + 1, parentArray[1]]);
-          }
-          this.ifSelectAll = false;
-          return;
-        } else {
-          // 如果当前选项不在selectList中的所有数组中,则将当前选项的下标组合到selectList中
-
-          if (currentIndex < this.selectList[0][0]) {
-            this.selectList[0][0] = currentIndex;
-
-          } else if (currentIndex > this.selectList[this.selectList.length - 1][1]) {
-            this.selectList[this.selectList.length - 1][1] = currentIndex;
-          } else {
-            for (let i = 0; i < this.selectList.length; i++) {
-              if (Math.abs(this.selectList[i][0] - currentIndex) === 1) {
-
-
-              } else if (Math.abs(this.selectList[i][1] - currentIndex) === 1) {
-
-
-              }
-              if (currentIndex > this.selectList[i][0] && currentIndex < this.selectList[i][1]) {
-                this.selectList.splice(i, 0, [currentIndex, currentIndex]);
-                break;
-              }
-            }
-          }
-
-
-          this.ifSelectAll = false;
-        }
-      }
-      const selection = this.selectList;
-      let index = selection.indexOf(row);
-      if (index == -1) {
-        selection.push(row);
+      const index = this.getVirtualRowIndex(i);
+      if (row['$v_checked'] === undefined) {
+        row['$v_checked'] = true;
+        this.virtualScroll.virtualData[index]['$v_checked'] = true;
       } else {
-        selection.splice(index, 1);
+        row['$v_checked'] = !row['$v_checked'];
+        this.virtualScroll.virtualData[index]['$v_checked'] = row['$v_checked'];
       }
-      const selectionChange = this.$listeners['selection-change'];
-      if (!!selectionChange) {
-        selectionChange(row);
-      }
+      this.selectNum = row['$v_checked'] ? Number(this.selectNum) + 1 : Number(this.selectNum) - 1;
     },
-
+    // 数组元素是否相同
+    _ifSameItem(arr) {
+      if (arr[0] === arr[1]) {
+        return arr[0];
+      }
+      return arr;
+    },
     // 生成虚拟滚动样式
     _getVirtualStyleRule() {
       const tdBorderHeight = 1;
@@ -403,6 +484,11 @@ export default {
         height: ${rowHeight}px !important;
         line-height: ${rowHeight}px;
       }
+      #${this.tableId} .el-table__header-wrapper {
+        overflow: hidden;
+      }
+      #${this.tableId} .el-table__header-wrapper  .cell{
+      }
       #${this.tableId} .virtual-scroll-checkbox .el-checkbox__inner,
       #${this.tableId} .virtual-scroll-checkbox .el-checkbox__inner::after {
         transition: none;
@@ -411,7 +497,7 @@ export default {
     },
     // 获取虚拟滚动列表的所需dom元素
     _getScrollWarppers() {
-      const el = this.$refs.table.getRefs().$el;
+      const el = this.getRefs().$el;
       const warpper = el.querySelector('.el-table__body-wrapper');
       const fixedWrapper = el.querySelector('.el-table__fixed .el-table__fixed-body-wrapper');
       const rightFixedWrapper = el.querySelector('.el-table__fixed-right .el-table__fixed-body-wrapper');
@@ -424,4 +510,27 @@ export default {
   }
 };
 </script>
-<style scoped></style>
+
+<style scoped>
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.mt-2 {
+  margin-top: 0.5rem /* 8px */;
+}
+
+.mr-2 {
+  margin-right: 0.5rem /* 8px */;
+}
+</style>
