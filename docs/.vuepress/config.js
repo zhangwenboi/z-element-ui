@@ -1,6 +1,7 @@
 /** @format */
 
 module.exports = {
+  base: './',
   configureWebpack: {
     resolve: {
       alias: {

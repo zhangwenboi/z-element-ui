@@ -6,7 +6,9 @@
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "docs:dev": "vuepress dev docs --port 5000 --temp .temp",
-    "docs:build": "vuepress build docs"
+    "docs:build": "vuepress build docs",
+    "checktb": "npm config set registry http://registry.npm.taobao.org/",
+    "checkor": "npm config set registry https://registry.npmjs.org/"
   },
   "dependencies": {
     "element-ui": "^2.15.13",
