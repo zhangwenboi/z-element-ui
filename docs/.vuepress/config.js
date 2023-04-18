@@ -1,7 +1,7 @@
 /** @format */
 
 module.exports = {
-  base: './',
+  base: '/z-element-ui/',
   configureWebpack: {
     resolve: {
       alias: {
