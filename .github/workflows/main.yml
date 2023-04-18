@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - main
-
 # 任务
 jobs:
   build-and-deploy:
@@ -29,7 +28,7 @@ jobs:
       # 生成静态文件
       - name: Build
         run: yarn  && yarn docs:build
-        
+
       # 部署到 GitHub Pages
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
