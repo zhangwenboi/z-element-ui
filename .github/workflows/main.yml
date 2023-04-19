@@ -24,7 +24,8 @@ jobs:
           # 选择要使用的 node 版本
           node-version: '16'
           registry-url: 'https://registry.npmjs.org'
-      
+      - name: publish npm 
+        run: npm publish
       # 缓存 node_modules
       - name: Cache dependencies
         uses: actions/cache@v2
@@ -44,7 +45,6 @@ jobs:
       # 运行构建脚本
       - name: Build VuePress site
         run: yarn docs:build
-      - name: 构建npm
       # 查看 workflow 的文档来获取更多信息
       # @see https://github.com/crazy-max/ghaction-github-pages
       - name: Deploy to GitHub Pages
@@ -60,8 +60,7 @@ jobs:
           target_branch: gh-pages
           # 部署目录为 VuePress 的默认输出目录
           build_dir: docs/.vuepress/dist
-      - name: publish npm 
-        run: npm publish
+     
             
         
       
