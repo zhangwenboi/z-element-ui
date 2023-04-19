@@ -47,13 +47,9 @@
 </template>
 
 <script>
-import zForm from '../packages/components/form/index.vue';
-
 export default {
   name: 'App',
-  components: {
-    zForm
-  },
+  components: {},
   data() {
     const randomTableColumn = () => {
       return new Array(300).fill(0).map((e, i) => ({ prop: `name${i}`, label: `第${i}列` }));

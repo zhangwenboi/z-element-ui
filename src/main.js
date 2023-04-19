@@ -4,7 +4,7 @@ import Vue from 'vue';
 import App from './App.vue';
 
 import ElementUI from 'element-ui';
-import { filters, directives, components, setElement } from '../dist/z-element-ui.es';
+import { filters, directives, components, setElement } from 'z-element-ui';
 //引入样式
 import 'element-ui/lib/theme-chalk/index.css';
 // 引入全局组件

@@ -25,7 +25,7 @@
 <script>
 import { row, col } from '../../utils/attrs';
 import formMixin from './formMixin';
-import { addResizeListener, removeResizeListener } from 'element-ui/src/utils/resize-event';
+import { addResizeListener, removeResizeListener } from '../../utils/resize-event';
 export default {
   name: 'zGridFormDemo',
   data() {
