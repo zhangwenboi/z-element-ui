@@ -24,8 +24,8 @@ jobs:
           # 选择要使用的 node 版本
           node-version: '16'
           registry-url: 'https://registry.npmjs.org'
-      - name: publish npm 
-        run: npm publish
+#       - name: publish npm 
+#         run: npm publish
       # 缓存 node_modules
       - name: Cache dependencies
         uses: actions/cache@v2
