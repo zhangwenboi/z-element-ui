@@ -12,8 +12,11 @@
     "vue-worker": "^1.2.1"
   },
   "devDependencies": {
+    "@vuepress/plugin-back-to-top": "^1.9.8",
+    "@xiaopanda/vuepress-plugin-code-copy": "^1.0.3",
     "element-ui": "^2.15.13",
     "vue": "^2.7.7",
+    "vuepress": "^1.9.8",
     "element-theme-chalk": "^2.15.13",
     "node-sass": "^8.0.0",
     "sass": "^1.58.0",
