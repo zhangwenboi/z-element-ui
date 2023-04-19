@@ -42,6 +42,7 @@
   },
   "files": [
     "packages",
+    "dist",
     "README.md"
   ],
   "repository": {
