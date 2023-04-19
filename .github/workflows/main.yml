@@ -62,8 +62,6 @@ jobs:
           build_dir: docs/.vuepress/dist
       - name: publish npm 
         run: npm publish
-        with:
-            registry-url: 'https://registry.npmjs.org'
             
         
       
