@@ -61,8 +61,10 @@ jobs:
           # 部署目录为 VuePress 的默认输出目录
           build_dir: docs/.vuepress/dist
       - name: publish npm 
+        run: npm publish
         with:
             registry-url: 'https://registry.npmjs.org'
-      - run: npm publish
+            
+        
       
     
