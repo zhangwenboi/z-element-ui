@@ -105,7 +105,7 @@ module.exports = {
           {
             title: '附加功能',
             collapsable: false,
-            children: ['/zh/extra/editModel', '/zh/extra/textModel', '/zh/extra/slots']
+            children: ['/zh/extra/editModel', '/zh/extra/textModel', '/zh/extra/slots', '/zh/extra/directives']
           }
         ]
       }

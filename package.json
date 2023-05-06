@@ -4,6 +4,7 @@
   "scripts": {
     "docs:dev": "vuepress dev docs --port 5000 --temp .temp",
     "docs:build": "vuepress build docs",
+    "build": "yarn build",
     "ver": "changeset version && yarn",
     "checktb": "npm config set registry http://registry.npm.taobao.org/",
     "checkor": "npm config set registry https://registry.npmjs.org/"
@@ -14,19 +15,31 @@
   "devDependencies": {
     "@vuepress/plugin-back-to-top": "^1.9.8",
     "@xiaopanda/vuepress-plugin-code-copy": "^1.0.3",
-    "element-ui": "^2.15.13",
-    "vue": "^2.7.7",
-    "vuepress": "^1.9.8",
     "element-theme-chalk": "^2.15.13",
+    "element-ui": "^2.15.13",
     "node-sass": "^8.0.0",
     "sass": "^1.58.0",
     "sass-loader": "^13.2.0",
-    "terser": "^5.16.3"
+    "terser": "^5.16.3",
+    "vue": "^2.7.7",
+    "vuepress": "^1.9.8"
   },
   "description": "基于element-ui的组件库,简单快速",
   "main": "packages/index.js",
+  "types": "packages/index.d.ts",
   "directories": {
     "doc": "docs"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "*",
+        "dist/*",
+        "packages/*",
+        "packages/*.d.ts",
+        "packages/*/index.d.ts"
+      ]
+    }
   },
   "files": [
     "packages",

@@ -7,6 +7,9 @@ import errImg from './errImg';
 import onlyInt from './onlyInt';
 import onlyNumber from './onlyNumber';
 import preventShake from './preventShake';
+import outside from './outside';
+import limit from './limit';
+import drag from './drag';
 const directives = {
   copy,
   dialogDrag,
@@ -14,7 +17,10 @@ const directives = {
   onlyNumber,
   onlyInt,
   errImg,
-  preventShake
+  preventShake,
+  outside,
+  limit,
+  drag
 };
 // 定义 install 方法，接收 Vue 作为参数。如果使用 use 注册插件，则所有的组件都将被注册
 const install = function (Vue, options) {
